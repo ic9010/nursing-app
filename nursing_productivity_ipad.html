@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -211,7 +210,6 @@ button:active {
   background:#1d4ed8;
 }
 
-/* iPad-optimized two-column layout */
 .ipad-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -520,7 +518,7 @@ button:active {
   color:var(--muted);
 }
 
-.calc-input input {
+.calc-input input, .calc-input select {
   padding:14px;
   border-radius:10px;
   border:1px solid var(--border);
@@ -529,7 +527,7 @@ button:active {
   font-size:15px;
 }
 
-.calc-input input:focus {
+.calc-input input:focus, .calc-input select:focus {
   outline:none;
   border-color:var(--accent);
   box-shadow:0 0 0 3px var(--accent-light);
@@ -724,7 +722,196 @@ textarea:focus {
   margin-bottom:12px;
 }
 
-/* Improved touch targets for iPad */
+/* Med Database Styles */
+.med-search {
+  margin-bottom:20px;
+}
+
+.med-search input {
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  font-size:15px;
+}
+
+.med-search input:focus {
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-light);
+}
+
+.med-results {
+  max-height:400px;
+  overflow-y:auto;
+}
+
+.med-item {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:16px;
+  margin-bottom:12px;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+
+.med-item:active {
+  transform:scale(0.98);
+  background:var(--accent-light);
+}
+
+.med-name {
+  font-weight:600;
+  font-size:16px;
+  margin-bottom:6px;
+  color:var(--accent);
+}
+
+.med-class {
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+
+.med-detail {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:20px;
+  margin-top:14px;
+}
+
+.med-detail h4 {
+  font-size:15px;
+  font-weight:600;
+  margin-bottom:8px;
+  margin-top:16px;
+  color:var(--accent);
+}
+
+.med-detail h4:first-child {
+  margin-top:0;
+}
+
+.med-detail p, .med-detail ul {
+  font-size:14px;
+  line-height:1.6;
+  margin-bottom:8px;
+}
+
+.med-detail ul {
+  padding-left:20px;
+}
+
+/* Photo upload styles */
+.photo-upload-container {
+  margin-top:14px;
+}
+
+.photo-upload-btn {
+  width:100%;
+  padding:14px;
+  background:var(--accent-light);
+  color:var(--accent);
+  border:2px dashed var(--accent);
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  transition:all 0.2s;
+}
+
+.photo-upload-btn:hover {
+  background:var(--accent);
+  color:white;
+}
+
+#photoInput {
+  display:none;
+}
+
+.photo-preview-container {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
+  gap:12px;
+  margin-top:14px;
+}
+
+.photo-preview {
+  position:relative;
+  border-radius:10px;
+  overflow:hidden;
+  aspect-ratio:1;
+  background:var(--border);
+}
+
+.photo-preview img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.photo-delete {
+  position:absolute;
+  top:4px;
+  right:4px;
+  background:var(--danger);
+  color:white;
+  border:none;
+  border-radius:50%;
+  width:28px;
+  height:28px;
+  min-width:28px;
+  min-height:28px;
+  padding:0;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  box-shadow:var(--shadow);
+}
+
+.tab-container {
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+  border-bottom:2px solid var(--border);
+}
+
+.tab {
+  padding:12px 20px;
+  background:transparent;
+  border:none;
+  border-bottom:3px solid transparent;
+  cursor:pointer;
+  font-weight:500;
+  font-size:15px;
+  color:var(--muted);
+  transition:all 0.2s;
+  min-height:auto;
+  box-shadow:none;
+}
+
+.tab.active {
+  color:var(--accent);
+  border-bottom-color:var(--accent);
+}
+
+.tab-content {
+  display:none;
+}
+
+.tab-content.active {
+  display:block;
+}
+
 @media (hover: none) and (pointer: coarse) {
   button {
     min-height:52px;
@@ -851,7 +1038,24 @@ textarea:focus {
       </div>
 
       <div class="card" style="margin-top:24px;">
-        <h3>💉 Dosage Calculator</h3>
+        <h3>💊 Medication Database</h3>
+        <div class="med-search">
+          <input type="text" id="medSearch" placeholder="Search medications...">
+        </div>
+        <div class="med-results" id="medResults"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ipad-grid">
+    <div class="card">
+      <h3>💉 Calculators</h3>
+      <div class="tab-container">
+        <button class="tab active" data-tab="dosage">Dosage</button>
+        <button class="tab" data-tab="iv">IV Drip Rate</button>
+      </div>
+
+      <div id="dosageTab" class="tab-content active">
         <div class="calc-grid">
           <div class="calc-input">
             <label>Ordered Dose (mg)</label>
@@ -869,16 +1073,47 @@ textarea:focus {
         <button id="calculateBtn" class="btn-primary" style="width:100%;">Calculate Dose</button>
         <div id="doseOutput"></div>
       </div>
-    </div>
-  </div>
 
-  <div class="ipad-grid">
+      <div id="ivTab" class="tab-content">
+        <div class="calc-grid">
+          <div class="calc-input">
+            <label>Total Volume (mL)</label>
+            <input type="number" id="ivVolume" placeholder="e.g., 1000" step="1">
+          </div>
+          <div class="calc-input">
+            <label>Time (hours)</label>
+            <input type="number" id="ivTime" placeholder="e.g., 8" step="0.1">
+          </div>
+          <div class="calc-input">
+            <label>Drop Factor (gtts/mL)</label>
+            <select id="dropFactor">
+              <option value="10">10 gtts/mL (Blood tubing)</option>
+              <option value="15">15 gtts/mL (Standard)</option>
+              <option value="20" selected>20 gtts/mL (Standard)</option>
+              <option value="60">60 gtts/mL (Microdrip)</option>
+            </select>
+          </div>
+        </div>
+        <button id="calculateIVBtn" class="btn-primary" style="width:100%;">Calculate IV Rate</button>
+        <div id="ivOutput"></div>
+      </div>
+    </div>
+
     <div class="card">
       <h3>📓 Quick Notes</h3>
       <textarea id="quickNotes" placeholder="Type your notes here..."></textarea>
+      <div class="photo-upload-container">
+        <label for="photoInput" class="photo-upload-btn">
+          📷 Add Photo
+        </label>
+        <input type="file" id="photoInput" accept="image/*" multiple>
+        <div class="photo-preview-container" id="photoPreviewContainer"></div>
+      </div>
       <button id="saveNotesBtn" class="btn-primary" style="width:100%; margin-top:14px;">Save Notes</button>
     </div>
+  </div>
 
+  <div class="ipad-grid-full">
     <div class="card">
       <h3>✅ Shift Checklist</h3>
       <div id="checklist" class="checklist">
@@ -907,7 +1142,7 @@ textarea:focus {
           <label for="check6">Hand-off report</label>
         </div>
       </div>
-      <button id="resetChecklistBtn" style="width:100%; margin-top:14px;">Reset Checklist</button>
+      <button id="resetChecklistBtn" style="margin-top:14px;">Reset Checklist</button>
     </div>
   </div>
 </div>
@@ -919,12 +1154,14 @@ textarea:focus {
   // CONSTANTS
   const TASKS_KEY = 'nursingTasks';
   const NOTES_KEY = 'nursingNotes';
+  const PHOTOS_KEY = 'nursingPhotos';
   const CHECKLIST_KEY = 'nursingChecklist';
   const TIMER_PRESET_KEY = 'timerPreset';
   const GRADUATION_DATE = new Date('2025-05-15');
 
   // STATE
   let tasks = JSON.parse(localStorage.getItem(TASKS_KEY)) || [];
+  let notePhotos = JSON.parse(localStorage.getItem(PHOTOS_KEY)) || [];
   let currentFilter = 'all';
   let timerSeconds = 25 * 60;
   let timerInterval = null;
@@ -932,6 +1169,146 @@ textarea:focus {
   let currentDate = new Date();
   let selectedDate = null;
   let graduationCountdownInterval = null;
+  let selectedMed = null;
+
+  // MEDICATION DATABASE
+  const medications = [
+    {
+      name: "Acetaminophen (Tylenol)",
+      class: "Analgesic, Antipyretic",
+      indications: "Pain relief, fever reduction",
+      dosage: "Adults: 325-650mg every 4-6 hours, Max 4000mg/day",
+      sideEffects: ["Nausea", "Rash", "Headache"],
+      nursing: "Monitor for hepatotoxicity. Do not exceed max dose. Assess pain level before and after administration.",
+      contraindications: "Severe liver disease, alcohol use"
+    },
+    {
+      name: "Lisinopril",
+      class: "ACE Inhibitor",
+      indications: "Hypertension, heart failure, post-MI",
+      dosage: "Initial: 10mg once daily, Maintenance: 20-40mg/day",
+      sideEffects: ["Dry cough", "Dizziness", "Hyperkalemia", "Angioedema"],
+      nursing: "Monitor BP and K+ levels. Take at same time daily. May cause persistent dry cough.",
+      contraindications: "Pregnancy, angioedema history"
+    },
+    {
+      name: "Metformin",
+      class: "Antidiabetic (Biguanide)",
+      indications: "Type 2 Diabetes",
+      dosage: "Initial: 500mg BID or 850mg daily, Max: 2550mg/day",
+      sideEffects: ["GI upset", "Diarrhea", "Lactic acidosis (rare)"],
+      nursing: "Take with meals. Monitor renal function. Hold before contrast dye procedures.",
+      contraindications: "Severe renal impairment, metabolic acidosis"
+    },
+    {
+      name: "Furosemide (Lasix)",
+      class: "Loop Diuretic",
+      indications: "Edema, heart failure, hypertension",
+      dosage: "20-80mg/day PO or IV",
+      sideEffects: ["Hypokalemia", "Dehydration", "Hypotension", "Ototoxicity"],
+      nursing: "Monitor I&O, daily weights, electrolytes (especially K+). Give in morning to avoid nocturia.",
+      contraindications: "Anuria, severe electrolyte depletion"
+    },
+    {
+      name: "Warfarin (Coumadin)",
+      class: "Anticoagulant",
+      indications: "DVT/PE prevention, A-fib, mechanical heart valves",
+      dosage: "Variable based on INR (target 2-3 for most indications)",
+      sideEffects: ["Bleeding", "Bruising", "Hair loss"],
+      nursing: "Monitor INR regularly. Avoid foods high in Vitamin K. Check for bleeding signs. Antidote: Vitamin K.",
+      contraindications: "Active bleeding, pregnancy"
+    },
+    {
+      name: "Morphine",
+      class: "Opioid Analgesic",
+      indications: "Moderate to severe pain, MI, pulmonary edema",
+      dosage: "2-10mg IV/IM q2-4h PRN",
+      sideEffects: ["Respiratory depression", "Constipation", "Sedation", "Nausea"],
+      nursing: "Monitor respiratory rate (hold if <12). Assess pain scale. Have Naloxone available. Monitor for constipation.",
+      contraindications: "Respiratory depression, acute asthma"
+    },
+    {
+      name: "Levothyroxine (Synthroid)",
+      class: "Thyroid Hormone",
+      indications: "Hypothyroidism",
+      dosage: "25-200mcg daily, individualized",
+      sideEffects: ["Tachycardia", "Weight loss", "Insomnia", "Heat intolerance"],
+      nursing: "Take on empty stomach, 30-60 min before breakfast. Monitor TSH levels. Same brand recommended.",
+      contraindications: "Acute MI, untreated adrenal insufficiency"
+    },
+    {
+      name: "Albuterol",
+      class: "Beta-2 Agonist Bronchodilator",
+      indications: "Asthma, COPD, bronchospasm",
+      dosage: "2 puffs q4-6h PRN or 2.5mg nebulizer",
+      sideEffects: ["Tachycardia", "Tremor", "Nervousness", "Palpitations"],
+      nursing: "Rinse mouth after use. Monitor heart rate. Teach proper inhaler technique. Use spacer if needed.",
+      contraindications: "Hypersensitivity to albuterol"
+    },
+    {
+      name: "Insulin (Regular)",
+      class: "Antidiabetic Hormone",
+      indications: "Type 1 & 2 Diabetes, DKA",
+      dosage: "Variable, based on blood glucose",
+      sideEffects: ["Hypoglycemia", "Weight gain", "Injection site reactions"],
+      nursing: "Monitor blood glucose. Rotate injection sites. Onset: 30min, Peak: 2-4hr. Have glucose source available.",
+      contraindications: "Hypoglycemia"
+    },
+    {
+      name: "Heparin",
+      class: "Anticoagulant",
+      indications: "DVT/PE treatment, prevent clotting",
+      dosage: "IV: Weight-based protocol, SubQ: 5000 units q8-12h",
+      sideEffects: ["Bleeding", "Thrombocytopenia", "Bruising"],
+      nursing: "Monitor aPTT (target 1.5-2x control). Check platelet count. Antidote: Protamine sulfate. Never give IM.",
+      contraindications: "Active bleeding, severe thrombocytopenia"
+    },
+    {
+      name: "Aspirin",
+      class: "Antiplatelet, NSAID",
+      indications: "MI prevention, stroke, pain, fever",
+      dosage: "81-325mg daily for cardio protection",
+      sideEffects: ["GI bleeding", "Tinnitus", "Allergic reactions"],
+      nursing: "Take with food. Monitor for bleeding. Do not give to children with viral illness (Reye's syndrome).",
+      contraindications: "Active bleeding, children with viral infections"
+    },
+    {
+      name: "Amoxicillin",
+      class: "Antibiotic (Penicillin)",
+      indications: "Bacterial infections (respiratory, ear, UTI)",
+      dosage: "250-500mg q8h or 500-875mg q12h",
+      sideEffects: ["Diarrhea", "Nausea", "Rash", "Allergic reactions"],
+      nursing: "Check for PCN allergy. Take full course. May take with or without food. Monitor for C. diff.",
+      contraindications: "Penicillin allergy"
+    },
+    {
+      name: "Prednisone",
+      class: "Corticosteroid",
+      indications: "Inflammation, autoimmune disorders, asthma",
+      dosage: "5-60mg daily, dose varies widely",
+      sideEffects: ["Hyperglycemia", "Weight gain", "Mood changes", "Immunosuppression"],
+      nursing: "Take with food. Do not stop abruptly. Monitor blood glucose. Watch for signs of infection.",
+      contraindications: "Systemic fungal infections"
+    },
+    {
+      name: "Omeprazole (Prilosec)",
+      class: "Proton Pump Inhibitor",
+      indications: "GERD, peptic ulcer, H. pylori",
+      dosage: "20-40mg daily before meal",
+      sideEffects: ["Headache", "Diarrhea", "Abdominal pain"],
+      nursing: "Take 30-60 min before first meal. May decrease Ca/Mg absorption with long-term use.",
+      contraindications: "Hypersensitivity to PPIs"
+    },
+    {
+      name: "Atorvastatin (Lipitor)",
+      class: "Statin (Lipid-lowering)",
+      indications: "Hyperlipidemia, cardiovascular disease prevention",
+      dosage: "10-80mg daily",
+      sideEffects: ["Muscle pain", "Elevated liver enzymes", "Headache"],
+      nursing: "Monitor lipid panel and liver function. Report muscle pain immediately. Avoid grapefruit juice.",
+      contraindications: "Active liver disease, pregnancy"
+    }
+  ];
 
   // CONFETTI
   const canvas = document.getElementById('confetti-canvas');
@@ -1078,7 +1455,8 @@ textarea:focus {
   }
 
   function formatDate(dateStr) {
-    const date = new Date(dateStr);
+    const [year, month, day] = dateStr.split('-');
+    const date = new Date(year, month - 1, day);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 
@@ -1211,11 +1589,114 @@ textarea:focus {
       '<div class="calc-result">💉 Administer ' + result.toFixed(2) + ' mL</div>';
   }
 
+  // IV DRIP CALCULATOR
+  function calculateIV() {
+    const volume = parseFloat(document.getElementById('ivVolume').value);
+    const time = parseFloat(document.getElementById('ivTime').value);
+    const dropFactor = parseFloat(document.getElementById('dropFactor').value);
+    
+    if (!volume || !time || !dropFactor) {
+      document.getElementById('ivOutput').innerHTML = 
+        '<div class="calc-result" style="background:rgba(220,38,38,0.1); color:var(--danger);">Please fill in all fields</div>';
+      return;
+    }
+    
+    const mlPerHour = volume / time;
+    const dropsPerMin = (volume * dropFactor) / (time * 60);
+    
+    document.getElementById('ivOutput').innerHTML = 
+      '<div class="calc-result">💧 Flow Rate: ' + mlPerHour.toFixed(1) + ' mL/hr<br>' +
+      dropsPerMin.toFixed(0) + ' gtts/min</div>';
+  }
+
+  // MEDICATION DATABASE
+  function searchMedications() {
+    const query = document.getElementById('medSearch').value.toLowerCase().trim();
+    const results = document.getElementById('medResults');
+    
+    if (!query) {
+      results.innerHTML = '<div class="empty-state">Start typing to search medications</div>';
+      selectedMed = null;
+      return;
+    }
+    
+    const filtered = medications.filter(function(med) {
+      return med.name.toLowerCase().includes(query) || 
+             med.class.toLowerCase().includes(query);
+    });
+    
+    if (filtered.length === 0) {
+      results.innerHTML = '<div class="empty-state">No medications found</div>';
+      selectedMed = null;
+      return;
+    }
+    
+    if (selectedMed) {
+      const med = selectedMed;
+      results.innerHTML = 
+        '<button onclick="clearMedSelection()" style="margin-bottom:14px;">← Back to results</button>' +
+        '<div class="med-detail">' +
+          '<div class="med-name" style="font-size:20px; margin-bottom:10px;">' + med.name + '</div>' +
+          '<div class="med-class" style="margin-bottom:16px;">' + med.class + '</div>' +
+          '<h4>Indications</h4><p>' + med.indications + '</p>' +
+          '<h4>Dosage</h4><p>' + med.dosage + '</p>' +
+          '<h4>Side Effects</h4><ul>' + med.sideEffects.map(function(s) { return '<li>' + s + '</li>'; }).join('') + '</ul>' +
+          '<h4>Nursing Considerations</h4><p>' + med.nursing + '</p>' +
+          '<h4>Contraindications</h4><p>' + med.contraindications + '</p>' +
+        '</div>';
+    } else {
+      results.innerHTML = filtered.map(function(med, idx) {
+        return '<div class="med-item" onclick="showMedDetail(' + medications.indexOf(med) + ')">' +
+          '<div class="med-name">' + med.name + '</div>' +
+          '<div class="med-class">' + med.class + '</div>' +
+        '</div>';
+      }).join('');
+    }
+  }
+
+  window.showMedDetail = function(index) {
+    selectedMed = medications[index];
+    searchMedications();
+  };
+
+  window.clearMedSelection = function() {
+    selectedMed = null;
+    searchMedications();
+  };
+
+  // PHOTO UPLOAD
+  function savePhotos() {
+    localStorage.setItem(PHOTOS_KEY, JSON.stringify(notePhotos));
+  }
+
+  function loadPhotos() {
+    renderPhotos();
+  }
+
+  function renderPhotos() {
+    const container = document.getElementById('photoPreviewContainer');
+    container.innerHTML = notePhotos.map(function(photo, idx) {
+      return '<div class="photo-preview">' +
+        '<img src="' + photo + '" alt="Note photo">' +
+        '<button class="photo-delete" onclick="deletePhoto(' + idx + ')">×</button>' +
+      '</div>';
+    }).join('');
+  }
+
+  window.deletePhoto = function(index) {
+    if (confirm('Delete this photo?')) {
+      notePhotos.splice(index, 1);
+      savePhotos();
+      renderPhotos();
+    }
+  };
+
   // NOTES
   function saveNotes() {
     const notes = document.getElementById('quickNotes').value;
     localStorage.setItem(NOTES_KEY, notes);
-    alert('✓ Notes saved successfully!');
+    savePhotos();
+    alert('✓ Notes and photos saved successfully!');
   }
 
   function loadNotes() {
@@ -1263,6 +1744,19 @@ textarea:focus {
       document.body.classList.add('dark');
       document.getElementById('themeBtn').innerText = '☀️';
     }
+  }
+
+  // TABS
+  function switchTab(tabName) {
+    document.querySelectorAll('.tab').forEach(function(t) {
+      t.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-content').forEach(function(c) {
+      c.classList.remove('active');
+    });
+    
+    document.querySelector('.tab[data-tab="' + tabName + '"]').classList.add('active');
+    document.getElementById(tabName + 'Tab').classList.add('active');
   }
 
   // CALENDAR
@@ -1350,7 +1844,8 @@ textarea:focus {
       return;
     }
     
-    const date = new Date(dateStr);
+    const [year, month, day] = dateStr.split('-');
+    const date = new Date(year, month - 1, day);
     container.innerHTML = '<h3 style="margin-bottom:12px; font-size:16px;">Tasks for ' + 
       date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) + '</h3>';
     
@@ -1397,15 +1892,38 @@ textarea:focus {
   document.getElementById('resetTimerBtn').addEventListener('click', resetTimer);
   document.getElementById('setCustomTimerBtn').addEventListener('click', setCustomTimer);
   document.getElementById('calculateBtn').addEventListener('click', calculate);
+  document.getElementById('calculateIVBtn').addEventListener('click', calculateIV);
   document.getElementById('saveNotesBtn').addEventListener('click', saveNotes);
   document.getElementById('resetChecklistBtn').addEventListener('click', resetChecklist);
   document.getElementById('prevMonthBtn').addEventListener('click', previousMonth);
   document.getElementById('nextMonthBtn').addEventListener('click', nextMonth);
+  document.getElementById('medSearch').addEventListener('input', searchMedications);
+
+  // Photo upload
+  document.getElementById('photoInput').addEventListener('change', function(e) {
+    const files = e.target.files;
+    for (let i = 0; i < files.length; i++) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        notePhotos.push(event.target.result);
+        renderPhotos();
+      };
+      reader.readAsDataURL(files[i]);
+    }
+    e.target.value = '';
+  });
 
   // Filter tabs
   document.querySelectorAll('.filter-tab').forEach(function(tab) {
     tab.addEventListener('click', function() {
       filterTasks(this.dataset.filter);
+    });
+  });
+
+  // Calculator tabs
+  document.querySelectorAll('.tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      switchTab(this.dataset.tab);
     });
   });
 
@@ -1450,10 +1968,12 @@ textarea:focus {
   // INITIALIZE
   loadTheme();
   loadNotes();
+  loadPhotos();
   loadChecklist();
   render();
   renderCalendar();
   updateTimerDisplay();
+  searchMedications();
 
   const savedPreset = localStorage.getItem(TIMER_PRESET_KEY);
   if (savedPreset) {
