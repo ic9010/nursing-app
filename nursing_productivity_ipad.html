@@ -11,369 +11,184 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#f8fafc; --card:#ffffff; --text:#0f172a; --muted:#64748b;
-  --accent:#2563eb; --accent-light:#dbeafe; --success:#16a34a;
-  --warning:#d97706; --danger:#dc2626; --border:#e5e7eb;
-  --shadow:0 2px 4px rgba(0,0,0,0.08); --shadow-lg:0 12px 32px rgba(0,0,0,0.12);
-}
-.dark {
-  --bg:#020617; --card:#0f172a; --text:#e5e7eb; --muted:#94a3b8;
-  --accent-light:#1e3a8a; --border:#1e293b;
-  --shadow:0 2px 4px rgba(0,0,0,0.4); --shadow-lg:0 12px 32px rgba(0,0,0,0.5);
-}
-* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-
-/* ── SCROLL FIX: html/body must allow scroll ── */
-html {
-  height:100%;
-  overflow-x:hidden;
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
-}
-body {
-  min-height:100%;
-  background-color:var(--bg);
-  color:var(--text);
-  font-family:'Poppins',-apple-system,sans-serif;
-  line-height:1.6;
-  touch-action:pan-y;
-  -webkit-user-select:none;
-  user-select:none;
-  overflow-x:hidden;
-  /* removed overflow-y:hidden and background-attachment:fixed (iOS bug) */
-  position:relative;
-}
-input,textarea { -webkit-user-select:text; user-select:text; }
-
-/* Background via pseudo-element so scroll works on iOS */
-body::before {
-  content:'';
-  position:fixed;
-  top:0; left:0; right:0; bottom:0;
-  background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop');
-  background-size:cover;
-  background-position:center;
-  z-index:-2;
-}
-body::after {
-  content:'';
-  position:fixed;
-  top:0; left:0; right:0; bottom:0;
-  background:rgba(248,250,252,0.88);
-  z-index:-1;
-  transition:background 0.3s;
-}
-body.dark::before {
-  background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070&auto=format&fit=crop');
-}
-body.dark::after { background:rgba(2,6,23,0.92); }
-
-.container { max-width:1024px; margin:auto; padding:24px; }
-#confetti-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999; }
-
-header {
-  background:rgba(255,255,255,0.95); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-  border:1px solid var(--border); border-radius:20px; padding:28px; margin-bottom:28px;
-  box-shadow:var(--shadow-lg); display:flex; justify-content:space-between; align-items:center; gap:20px;
-}
-.dark header { background:rgba(15,23,42,0.95); }
-.header-left { display:flex; align-items:center; gap:20px; flex:1; }
-.logo-container {
-  width:90px; height:90px; background:linear-gradient(135deg,#dc2626,#991b1b);
-  border-radius:16px; display:flex; align-items:center; justify-content:center;
-  box-shadow:var(--shadow-lg); flex-shrink:0;
-}
-.logo-text { color:white; font-weight:700; font-size:36px; letter-spacing:-1px; }
-.header-info h1 {
-  font-family:'Playfair Display',serif; font-size:38px; font-weight:900; margin-bottom:6px;
-  background:linear-gradient(135deg,#2563eb,#7c3aed); -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:-0.5px;
-}
-.header-info .subtitle { color:var(--muted); font-size:15px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-.badge { background:var(--accent-light); color:var(--accent); padding:6px 12px; border-radius:8px; font-size:13px; font-weight:600; }
-
-button {
-  padding:14px 22px; border-radius:12px; border:1px solid var(--border); background:var(--card);
-  color:var(--text); cursor:pointer; font-weight:500; transition:all 0.2s; box-shadow:var(--shadow);
-  font-size:16px; min-height:48px; min-width:48px; touch-action:manipulation;
-}
-button:active { transform:scale(0.96); background:var(--accent-light); }
-.btn-primary { background:var(--accent); color:white; border-color:var(--accent); }
-.btn-primary:active { background:#1d4ed8; }
-
-.ipad-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:28px; }
-.grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; margin-bottom:28px; }
-
-.card {
-  background:rgba(255,255,255,0.95); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-  border:1px solid var(--border); border-radius:20px; padding:24px; box-shadow:var(--shadow);
-}
-.dark .card { background:rgba(15,23,42,0.95); }
-.card h3 { font-size:14px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:14px; }
-.stat { font-size:40px; font-weight:700; background:linear-gradient(135deg,var(--accent),#7c3aed); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.stat-label { color:var(--muted); font-size:13px; margin-top:6px; }
-
-.graduation-card {
-  background:linear-gradient(135deg,#7c3aed,#2563eb); color:white;
-  padding:28px; border-radius:20px; box-shadow:var(--shadow-lg); margin-bottom:28px;
-  position:relative; overflow:hidden;
-}
-.graduation-card::before { content:'🎓'; position:absolute; top:-20px; right:-20px; font-size:120px; opacity:0.15; }
-.graduation-card h2 { font-family:'Playfair Display',serif; font-size:32px; font-weight:900; margin-bottom:12px; position:relative; }
-.graduation-card .countdown { font-size:52px; font-weight:700; margin:16px 0; position:relative; }
-.graduation-card .subtitle { font-size:16px; opacity:0.9; position:relative; }
-.graduation-card .grad-date { font-size:13px; opacity:0.7; margin-top:6px; position:relative; }
-
-.filter-tabs { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
-.filter-tab {
-  padding:10px 18px; border-radius:10px; background:var(--card); border:1px solid var(--border);
-  cursor:pointer; font-size:14px; font-weight:500; transition:all 0.2s; min-height:44px;
-}
-.filter-tab.active { background:var(--accent); color:white; border-color:var(--accent); }
-.filter-tab:active { transform:scale(0.95); }
-
-.task-form { display:flex; flex-direction:column; gap:14px; margin-bottom:20px; }
-.task-form input,.task-form select {
-  padding:14px; border-radius:10px; border:1px solid var(--border);
-  background:var(--card); color:var(--text); font-size:15px; font-family:inherit;
-}
-.task-form input:focus,.task-form select:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
-
-.task-item {
-  background:var(--card); border:1px solid var(--border); border-radius:12px;
-  padding:16px; margin-bottom:12px; display:flex; align-items:center; gap:14px; transition:all 0.2s;
-}
-.task-item.done { opacity:0.6; }
-.task-item.done .task-text { text-decoration:line-through; }
-.task-checkbox {
-  width:28px; height:28px; border-radius:50%; border:2px solid var(--border);
-  cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-  transition:all 0.2s; min-width:28px; min-height:28px;
-}
-.task-checkbox.checked { background:var(--success); border-color:var(--success); color:white; }
-.task-content { flex:1; }
-.task-text { font-weight:500; font-size:15px; margin-bottom:4px; }
-.task-meta { display:flex; gap:10px; font-size:12px; color:var(--muted); flex-wrap:wrap; }
-.priority-high { border-left:4px solid var(--danger); }
-.priority-medium { border-left:4px solid var(--warning); }
-.priority-low { border-left:4px solid var(--accent); }
-.task-actions button { padding:8px 12px; min-width:auto; min-height:36px; font-size:14px; }
-
-.timer-display {
-  font-size:64px; font-weight:700; text-align:center; margin:24px 0; font-variant-numeric:tabular-nums;
-  background:linear-gradient(135deg,var(--accent),#7c3aed); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-}
-.timer-controls { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; }
-.timer-presets { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px; }
-.preset-btn { padding:12px; font-size:14px; }
-.preset-btn.active { background:var(--accent); color:white; border-color:var(--accent); }
-.custom-timer { display:flex; gap:10px; align-items:center; margin-bottom:20px; }
-.custom-timer input {
-  flex:1; padding:12px; border-radius:10px; border:1px solid var(--border);
-  background:var(--card); color:var(--text); font-size:15px;
-}
-.custom-timer input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
-
-.calc-grid { display:grid; gap:14px; margin-bottom:20px; }
-.calc-input { display:flex; flex-direction:column; gap:8px; }
-.calc-input label { font-size:13px; font-weight:600; color:var(--muted); }
-.calc-input input,.calc-input select {
-  padding:14px; border-radius:10px; border:1px solid var(--border); background:var(--card); color:var(--text); font-size:15px;
-}
-.calc-input input:focus,.calc-input select:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
-.calc-result { background:var(--accent-light); color:var(--accent); padding:18px; border-radius:12px; text-align:center; font-size:18px; font-weight:600; margin-top:14px; }
-
-textarea {
-  width:100%; padding:14px; border-radius:10px; border:1px solid var(--border);
-  background:var(--card); color:var(--text); font-size:15px; font-family:inherit; resize:vertical; min-height:180px;
-}
-textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
-
-.checklist { display:flex; flex-direction:column; gap:12px; }
-.checklist-item {
-  display:flex; align-items:center; gap:12px; padding:14px;
-  background:var(--card); border:1px solid var(--border); border-radius:10px;
-}
-.checklist-item input[type="checkbox"] { width:24px; height:24px; cursor:pointer; min-width:24px; min-height:24px; }
-.checklist-item label { flex:1; cursor:pointer; font-size:15px; }
-
-.calendar-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
-.calendar-header h3 { font-size:20px; font-weight:700; text-transform:none; }
-.calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; }
-.calendar-day-header { text-align:center; font-size:12px; font-weight:600; color:var(--muted); padding:10px; }
-.calendar-day {
-  aspect-ratio:1; display:flex; align-items:center; justify-content:center;
-  border-radius:10px; cursor:pointer; transition:all 0.2s; position:relative;
-  background:var(--card); border:1px solid var(--border); min-height:52px;
-}
-.calendar-day.today { background:var(--accent-light); border-color:var(--accent); font-weight:600; }
-.calendar-day.selected { background:var(--accent); color:white; border-color:var(--accent); }
-.calendar-day.has-tasks::after { content:''; position:absolute; bottom:6px; width:6px; height:6px; background:var(--accent); border-radius:50%; }
-.calendar-day.selected.has-tasks::after { background:white; }
-.calendar-day.other-month { opacity:0.3; cursor:default; }
-.calendar-day-number { font-size:15px; font-weight:500; }
-
-.event-item { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:10px; }
-.event-item.priority-high { border-left:4px solid var(--danger); }
-.event-item.priority-medium { border-left:4px solid var(--warning); }
-.event-item.priority-low { border-left:4px solid var(--accent); }
-#dayEvents { margin-top:20px; padding:20px; background:rgba(255,255,255,0.5); border-radius:12px; min-height:120px; }
-.dark #dayEvents { background:rgba(15,23,42,0.5); }
-
-.empty-state { text-align:center; color:var(--muted); padding:40px 20px; font-size:15px; }
-.empty-state::before { content:'📋'; display:block; font-size:48px; margin-bottom:12px; }
-
-/* ── MED STYLES ── */
-.med-section-header {
-  display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;
-}
-.med-count-badge {
-  background:linear-gradient(135deg,var(--accent),#7c3aed);
-  color:white; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;
-}
-.med-search-wrapper { position:relative; margin-bottom:12px; }
-.med-search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:16px; pointer-events:none; }
-.med-search-wrapper input {
-  width:100%; padding:14px 14px 14px 42px; border-radius:10px; border:1px solid var(--border);
-  background:var(--card); color:var(--text); font-size:15px; font-family:inherit;
-}
-.med-search-wrapper input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
-.med-clear-btn {
-  position:absolute; right:12px; top:50%; transform:translateY(-50%);
-  background:var(--muted); color:white; border:none; border-radius:50%;
-  width:22px; height:22px; min-width:22px; min-height:22px;
-  padding:0; cursor:pointer; font-size:14px; display:none; align-items:center; justify-content:center; box-shadow:none;
-}
-.med-category-filters {
-  display:flex; gap:8px; margin-bottom:14px; overflow-x:auto; padding-bottom:4px;
-  scrollbar-width:none; -webkit-overflow-scrolling:touch;
-}
-.med-category-filters::-webkit-scrollbar { display:none; }
-.med-cat-btn {
-  padding:7px 14px; border-radius:8px; background:var(--card); border:1px solid var(--border);
-  cursor:pointer; font-size:12px; font-weight:600; white-space:nowrap; transition:all 0.2s;
-  min-height:36px; box-shadow:none;
-}
-.med-cat-btn.active { background:var(--accent); color:white; border-color:var(--accent); }
-.med-results { max-height:420px; overflow-y:auto; scrollbar-width:thin; }
-.med-results::-webkit-scrollbar { width:4px; }
-.med-results::-webkit-scrollbar-track { background:transparent; }
-.med-results::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
-.med-item {
-  background:var(--card); border:1px solid var(--border); border-radius:10px;
-  padding:14px 16px; margin-bottom:10px; cursor:pointer; transition:all 0.2s;
-  display:flex; align-items:center; gap:12px;
-}
-.med-item:active { transform:scale(0.98); background:var(--accent-light); }
-.med-item-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; background:var(--accent-light); }
-.med-item-body { flex:1; min-width:0; }
-.med-name { font-weight:600; font-size:15px; margin-bottom:3px; color:var(--accent); }
-.med-name mark { background:rgba(37,99,235,0.15); color:var(--accent); border-radius:3px; padding:0 2px; }
-.med-generic { font-size:12px; color:var(--muted); font-style:italic; margin-bottom:3px; }
-.med-class { font-size:12px; color:var(--muted); }
-.med-class-tag { display:inline-block; background:var(--accent-light); color:var(--accent); border-radius:6px; padding:2px 8px; font-size:11px; font-weight:600; }
-.med-arrow { color:var(--muted); font-size:18px; }
-.med-detail-view { animation: fadeSlideIn 0.2s ease; }
-@keyframes fadeSlideIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-.med-detail-header { background:linear-gradient(135deg,var(--accent),#7c3aed); color:white; border-radius:12px; padding:18px; margin-bottom:16px; }
-.med-detail-header .med-detail-name { font-size:20px; font-weight:700; margin-bottom:4px; }
-.med-detail-header .med-detail-generic { font-size:13px; opacity:0.85; margin-bottom:6px; font-style:italic; }
-.med-detail-header .med-detail-class { background:rgba(255,255,255,0.2); display:inline-block; border-radius:6px; padding:3px 10px; font-size:12px; font-weight:600; }
-.med-detail-section { margin-bottom:16px; }
-.med-detail-section h4 { font-size:13px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
-.med-detail-section p, .med-detail-section ul { font-size:14px; line-height:1.7; color:var(--text); }
-.med-detail-section ul { padding-left:18px; }
-.med-detail-section li { margin-bottom:3px; }
-.med-tags { display:flex; flex-wrap:wrap; gap:6px; }
-.med-tag-red { background:rgba(220,38,38,0.1); color:var(--danger); border-radius:6px; padding:4px 10px; font-size:12px; font-weight:500; }
-.med-tag-yellow { background:rgba(217,119,6,0.1); color:var(--warning); border-radius:6px; padding:4px 10px; font-size:12px; font-weight:500; }
-.med-tag-green { background:rgba(22,163,74,0.1); color:var(--success); border-radius:6px; padding:4px 10px; font-size:12px; font-weight:500; }
-.med-tag-blue { background:var(--accent-light); color:var(--accent); border-radius:6px; padding:4px 10px; font-size:12px; font-weight:500; }
-.med-nursing-box { background:rgba(22,163,74,0.08); border:1px solid rgba(22,163,74,0.3); border-radius:10px; padding:14px; }
-.med-nursing-box p { font-size:14px; line-height:1.7; color:var(--text); }
-.med-back-btn {
-  display:flex; align-items:center; gap:8px; padding:10px 16px; margin-bottom:14px;
-  background:var(--card); border:1px solid var(--border); border-radius:10px;
-  cursor:pointer; font-size:14px; font-weight:500; color:var(--muted); transition:all 0.2s;
-  min-height:40px; box-shadow:none;
-}
-.med-back-btn:hover { color:var(--accent); border-color:var(--accent); }
-.med-no-results { text-align:center; padding:30px 20px; color:var(--muted); }
-.med-no-results .med-no-results-icon { font-size:40px; display:block; margin-bottom:10px; }
-.med-no-results p { font-size:14px; }
-.med-search-hint { text-align:center; padding:20px; color:var(--muted); font-size:13px; }
-.med-search-hint .hint-icon { font-size:36px; display:block; margin-bottom:8px; }
-
-/* ── ADD MED FORM ── */
-.add-med-toggle {
-  width:100%; padding:12px; background:rgba(37,99,235,0.08); color:var(--accent);
-  border:2px dashed var(--accent); border-radius:10px; cursor:pointer; font-weight:600;
-  display:flex; align-items:center; justify-content:center; gap:8px;
-  font-size:14px; min-height:44px; box-shadow:none; margin-bottom:12px; transition:all 0.2s;
-}
-.add-med-toggle:hover { background:var(--accent); color:white; }
-.add-med-form {
-  background:var(--accent-light); border:1px solid var(--accent); border-radius:12px;
-  padding:16px; margin-bottom:12px; display:none;
-}
-.add-med-form.visible { display:block; }
-.add-med-form h4 { font-size:14px; font-weight:700; color:var(--accent); margin-bottom:12px; }
-.add-med-form input, .add-med-form select, .add-med-form textarea {
-  width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--border);
-  background:var(--card); color:var(--text); font-size:14px; font-family:inherit; margin-bottom:8px;
-  min-height:auto;
-}
-.add-med-form textarea { min-height:60px; resize:vertical; }
-.add-med-form input:focus, .add-med-form select:focus, .add-med-form textarea:focus {
-  outline:none; border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-light);
-}
-.add-med-form label { font-size:11px; font-weight:600; color:var(--muted); display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.5px; }
-.add-med-form-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.add-med-btn-row { display:flex; gap:8px; margin-top:4px; }
-.add-med-btn-row button { flex:1; font-size:14px; min-height:40px; padding:10px; }
-.custom-meds-badge { background:rgba(22,163,74,0.15); color:var(--success); border-radius:6px; padding:2px 8px; font-size:11px; font-weight:600; margin-left:6px; }
-
-/* ── PHOTO / NOTES ── */
-.photo-upload-container { margin-top:14px; }
-.photo-upload-btn {
-  width:100%; padding:14px; background:var(--accent-light); color:var(--accent);
-  border:2px dashed var(--accent); border-radius:10px; cursor:pointer; font-weight:600;
-  display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s;
-}
-.photo-upload-btn:hover { background:var(--accent); color:white; }
-#photoInput { display:none; }
-.photo-preview-container { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:12px; margin-top:14px; }
-.photo-preview { position:relative; border-radius:10px; overflow:hidden; aspect-ratio:1; background:var(--border); }
-.photo-preview img { width:100%; height:100%; object-fit:cover; }
-.photo-delete {
-  position:absolute; top:4px; right:4px; background:var(--danger); color:white;
-  border:none; border-radius:50%; width:28px; height:28px; min-width:28px; min-height:28px;
-  padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:16px;
-}
-.tab-container { display:flex; gap:10px; margin-bottom:20px; border-bottom:2px solid var(--border); }
-.tab {
-  padding:12px 20px; background:transparent; border:none; border-bottom:3px solid transparent;
-  cursor:pointer; font-weight:500; font-size:15px; color:var(--muted); transition:all 0.2s;
-  min-height:auto; box-shadow:none;
-}
-.tab.active { color:var(--accent); border-bottom-color:var(--accent); }
-.tab-content { display:none; }
-.tab-content.active { display:block; }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 700px) {
-  .ipad-grid { grid-template-columns: 1fr; }
-  .grid { grid-template-columns: repeat(2,1fr); }
-  .header-info h1 { font-size:26px; }
-  .logo-container { width:60px; height:60px; }
-  .logo-text { font-size:24px; }
-  .graduation-card .countdown { font-size:38px; }
-  .container { padding: 16px; }
-}
+/* ===== RESPONSIVE FIX: clamp() for fluid sizing across all screens ===== */
+:root{--bg:#f8fafc;--card:#fff;--text:#0f172a;--muted:#64748b;--accent:#2563eb;--accent-light:#dbeafe;--success:#16a34a;--warning:#d97706;--danger:#dc2626;--border:#e5e7eb;--shadow:0 2px 4px rgba(0,0,0,.08);--shadow-lg:0 12px 32px rgba(0,0,0,.12);--sp:clamp(10px,1.8vw,22px)}
+.dark{--bg:#020617;--card:#0f172a;--text:#e5e7eb;--muted:#94a3b8;--accent-light:#1e3a8a;--border:#1e293b;--shadow:0 2px 4px rgba(0,0,0,.4);--shadow-lg:0 12px 32px rgba(0,0,0,.5)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}
+body{min-height:100%;background-color:var(--bg);color:var(--text);font-family:'Poppins',-apple-system,sans-serif;font-size:clamp(12px,1.35vw,15px);line-height:1.6;touch-action:pan-y;-webkit-user-select:none;user-select:none;overflow-x:hidden;position:relative}
+input,textarea{-webkit-user-select:text;user-select:text}
+body::before{content:'';position:fixed;inset:0;background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop');background-size:cover;background-position:center;z-index:-2}
+body::after{content:'';position:fixed;inset:0;background:rgba(248,250,252,.88);z-index:-1;transition:background .3s}
+body.dark::before{background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070&auto=format&fit=crop')}
+body.dark::after{background:rgba(2,6,23,.92)}
+.container{max-width:min(1100px,100%);margin:auto;padding:var(--sp)}
+#confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999}
+header{background:rgba(255,255,255,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:clamp(10px,1.6vw,20px);margin-bottom:var(--sp);box-shadow:var(--shadow-lg);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.dark header{background:rgba(15,23,42,.95)}
+.header-left{display:flex;align-items:center;gap:clamp(10px,1.5vw,18px);flex:1;min-width:0}
+.logo-container{width:clamp(42px,5.5vw,66px);height:clamp(42px,5.5vw,66px);background:linear-gradient(135deg,#dc2626,#991b1b);border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-lg);flex-shrink:0}
+.logo-text{color:#fff;font-weight:700;font-size:clamp(15px,2.8vw,26px);letter-spacing:-1px}
+.header-info{min-width:0}
+.header-info h1{font-family:'Playfair Display',serif;font-size:clamp(17px,3vw,32px);font-weight:900;margin-bottom:3px;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-info .subtitle{color:var(--muted);font-size:clamp(10px,1.1vw,13px);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.badge{background:var(--accent-light);color:var(--accent);padding:3px 9px;border-radius:6px;font-size:clamp(9px,1vw,12px);font-weight:600}
+button{padding:clamp(7px,1vw,11px) clamp(11px,1.5vw,17px);border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;font-weight:500;transition:all .2s;box-shadow:var(--shadow);font-size:clamp(11px,1.2vw,14px);min-height:38px;min-width:38px;touch-action:manipulation;font-family:inherit}
+button:active{transform:scale(.96);background:var(--accent-light)}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:active{background:#1d4ed8}
+.graduation-card{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;padding:clamp(14px,2vw,24px);border-radius:16px;box-shadow:var(--shadow-lg);margin-bottom:var(--sp);position:relative;overflow:hidden}
+.graduation-card::before{content:'🎓';position:absolute;top:-15px;right:-15px;font-size:clamp(55px,8vw,105px);opacity:.15}
+.graduation-card h2{font-family:'Playfair Display',serif;font-size:clamp(15px,2.4vw,26px);font-weight:900;margin-bottom:6px;position:relative}
+.graduation-card .countdown{font-size:clamp(28px,5vw,50px);font-weight:700;margin:8px 0;position:relative}
+.graduation-card .subtitle{font-size:clamp(11px,1.3vw,14px);opacity:.9;position:relative}
+.graduation-card .grad-date{font-size:clamp(10px,1.1vw,12px);opacity:.7;margin-top:3px;position:relative}
+.ipad-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp);margin-bottom:var(--sp)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(8px,1.3vw,16px);margin-bottom:var(--sp)}
+.card{background:rgba(255,255,255,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:clamp(12px,1.7vw,22px);box-shadow:var(--shadow)}
+.dark .card{background:rgba(15,23,42,.95)}
+.card h3{font-size:clamp(9px,1vw,12px);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.stat{font-size:clamp(24px,3.5vw,38px);font-weight:700;background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{color:var(--muted);font-size:clamp(10px,.95vw,12px);margin-top:3px}
+.filter-tabs{display:flex;gap:6px;margin-bottom:11px;flex-wrap:wrap}
+.filter-tab{padding:6px 12px;border-radius:8px;background:var(--card);border:1px solid var(--border);cursor:pointer;font-size:clamp(10px,1.05vw,13px);font-weight:500;transition:all .2s;min-height:34px}
+.filter-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.filter-tab:active{transform:scale(.95)}
+.task-form{display:flex;flex-direction:column;gap:8px;margin-bottom:13px}
+.task-form input,.task-form select{padding:9px 11px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:clamp(11px,1.15vw,14px);font-family:inherit}
+.task-form input:focus,.task-form select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+.task-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:7px;display:flex;align-items:center;gap:9px;transition:all .2s}
+.task-item.done{opacity:.6}
+.task-item.done .task-text{text-decoration:line-through}
+.task-checkbox{width:23px;height:23px;border-radius:50%;border:2px solid var(--border);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;min-width:23px;min-height:23px}
+.task-checkbox.checked{background:var(--success);border-color:var(--success);color:#fff}
+.task-content{flex:1;min-width:0}
+.task-text{font-weight:500;font-size:clamp(11px,1.15vw,14px);margin-bottom:2px}
+.task-meta{display:flex;gap:6px;font-size:clamp(9px,.9vw,11px);color:var(--muted);flex-wrap:wrap}
+.priority-high{border-left:4px solid var(--danger)}
+.priority-medium{border-left:4px solid var(--warning)}
+.priority-low{border-left:4px solid var(--accent)}
+.task-actions button{padding:5px 8px;min-width:auto;min-height:28px;font-size:12px}
+.timer-display{font-size:clamp(34px,5vw,58px);font-weight:700;text-align:center;margin:13px 0;font-variant-numeric:tabular-nums;background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.timer-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:13px}
+.timer-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:11px}
+.preset-btn{padding:8px;font-size:clamp(10px,1.05vw,13px)}
+.preset-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.custom-timer{display:flex;gap:7px;align-items:center;margin-bottom:11px}
+.custom-timer input{flex:1;padding:9px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:clamp(11px,1.15vw,14px);font-family:inherit}
+.custom-timer input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+.calc-grid{display:grid;gap:9px;margin-bottom:11px}
+.calc-input{display:flex;flex-direction:column;gap:4px}
+.calc-input label{font-size:clamp(9px,.95vw,12px);font-weight:600;color:var(--muted)}
+.calc-input input,.calc-input select{padding:9px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:clamp(11px,1.15vw,14px);font-family:inherit}
+.calc-input input:focus,.calc-input select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+.calc-result{background:var(--accent-light);color:var(--accent);padding:11px;border-radius:9px;text-align:center;font-size:clamp(12px,1.3vw,16px);font-weight:600;margin-top:9px}
+textarea{width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:clamp(11px,1.15vw,14px);font-family:inherit;resize:vertical;min-height:clamp(90px,12vw,160px)}
+textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+.checklist{display:flex;flex-direction:column;gap:7px}
+.checklist-item{display:flex;align-items:center;gap:9px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px}
+.checklist-item input[type=checkbox]{width:20px;height:20px;cursor:pointer;min-width:20px;min-height:20px}
+.checklist-item label{flex:1;cursor:pointer;font-size:clamp(11px,1.15vw,14px)}
+.calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}
+.calendar-header h3{font-size:clamp(12px,1.5vw,17px);font-weight:700;text-transform:none}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:clamp(2px,.55vw,6px)}
+.calendar-day-header{text-align:center;font-size:clamp(8px,.85vw,11px);font-weight:600;color:var(--muted);padding:4px 1px}
+.calendar-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;transition:all .2s;position:relative;background:var(--card);border:1px solid var(--border);min-height:clamp(26px,3.8vw,44px)}
+.calendar-day.today{background:var(--accent-light);border-color:var(--accent);font-weight:600}
+.calendar-day.selected{background:var(--accent);color:#fff;border-color:var(--accent)}
+.calendar-day.has-tasks::after{content:'';position:absolute;bottom:3px;width:4px;height:4px;background:var(--accent);border-radius:50%}
+.calendar-day.selected.has-tasks::after{background:#fff}
+.calendar-day.other-month{opacity:.3;cursor:default}
+.calendar-day-number{font-size:clamp(9px,1.1vw,14px);font-weight:500}
+.event-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px;margin-bottom:6px}
+.event-item.priority-high{border-left:4px solid var(--danger)}
+.event-item.priority-medium{border-left:4px solid var(--warning)}
+.event-item.priority-low{border-left:4px solid var(--accent)}
+#dayEvents{margin-top:11px;padding:11px;background:rgba(255,255,255,.5);border-radius:9px;min-height:70px}
+.dark #dayEvents{background:rgba(15,23,42,.5)}
+.empty-state{text-align:center;color:var(--muted);padding:22px 12px;font-size:clamp(11px,1.1vw,14px)}
+.empty-state::before{content:'\1F4CB';display:block;font-size:34px;margin-bottom:7px}
+.med-section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;flex-wrap:wrap;gap:6px}
+.med-count-badge{background:linear-gradient(135deg,var(--accent),#7c3aed);color:#fff;padding:2px 9px;border-radius:20px;font-size:clamp(9px,.95vw,11px);font-weight:600}
+.med-search-wrapper{position:relative;margin-bottom:8px}
+.med-search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none}
+.med-search-wrapper input{width:100%;padding:9px 9px 9px 33px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:clamp(11px,1.15vw,14px);font-family:inherit}
+.med-search-wrapper input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+.med-clear-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--muted);color:#fff;border:none;border-radius:50%;width:18px;height:18px;min-width:18px;min-height:18px;padding:0;cursor:pointer;font-size:11px;display:none;align-items:center;justify-content:center;box-shadow:none}
+.med-category-filters{display:flex;gap:5px;margin-bottom:9px;overflow-x:auto;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.med-category-filters::-webkit-scrollbar{display:none}
+.med-cat-btn{padding:4px 10px;border-radius:6px;background:var(--card);border:1px solid var(--border);cursor:pointer;font-size:clamp(9px,.9vw,11px);font-weight:600;white-space:nowrap;transition:all .2s;min-height:28px;box-shadow:none}
+.med-cat-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.med-results{max-height:340px;overflow-y:auto;scrollbar-width:thin}
+.med-results::-webkit-scrollbar{width:4px}
+.med-results::-webkit-scrollbar-track{background:transparent}
+.med-results::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.med-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.med-item:active{transform:scale(.98);background:var(--accent-light)}
+.med-item-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:var(--accent-light)}
+.med-item-body{flex:1;min-width:0}
+.med-name{font-weight:600;font-size:clamp(11px,1.15vw,14px);margin-bottom:1px;color:var(--accent)}
+.med-name mark{background:rgba(37,99,235,.15);color:var(--accent);border-radius:3px;padding:0 2px}
+.med-generic{font-size:clamp(9px,.9vw,11px);color:var(--muted);font-style:italic;margin-bottom:1px}
+.med-class{font-size:clamp(9px,.9vw,11px);color:var(--muted)}
+.med-class-tag{display:inline-block;background:var(--accent-light);color:var(--accent);border-radius:4px;padding:1px 6px;font-size:clamp(8px,.85vw,10px);font-weight:600}
+.med-arrow{color:var(--muted);font-size:14px}
+.med-detail-view{animation:fadeSlideIn .2s ease}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.med-detail-header{background:linear-gradient(135deg,var(--accent),#7c3aed);color:#fff;border-radius:9px;padding:12px;margin-bottom:11px}
+.med-detail-header .med-detail-name{font-size:clamp(13px,1.7vw,18px);font-weight:700;margin-bottom:2px}
+.med-detail-header .med-detail-generic{font-size:clamp(9px,1vw,12px);opacity:.85;margin-bottom:4px;font-style:italic}
+.med-detail-header .med-detail-class{background:rgba(255,255,255,.2);display:inline-block;border-radius:4px;padding:2px 7px;font-size:clamp(8px,.9vw,11px);font-weight:600}
+.med-detail-section{margin-bottom:11px}
+.med-detail-section h4{font-size:clamp(9px,1vw,12px);font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.med-detail-section p,.med-detail-section ul{font-size:clamp(10px,1.05vw,13px);line-height:1.7;color:var(--text)}
+.med-detail-section ul{padding-left:14px}
+.med-detail-section li{margin-bottom:2px}
+.med-tags{display:flex;flex-wrap:wrap;gap:4px}
+.med-tag-red{background:rgba(220,38,38,.1);color:var(--danger);border-radius:4px;padding:2px 6px;font-size:clamp(9px,.9vw,11px);font-weight:500}
+.med-tag-yellow{background:rgba(217,119,6,.1);color:var(--warning);border-radius:4px;padding:2px 6px;font-size:clamp(9px,.9vw,11px);font-weight:500}
+.med-tag-green{background:rgba(22,163,74,.1);color:var(--success);border-radius:4px;padding:2px 6px;font-size:clamp(9px,.9vw,11px);font-weight:500}
+.med-tag-blue{background:var(--accent-light);color:var(--accent);border-radius:4px;padding:2px 6px;font-size:clamp(9px,.9vw,11px);font-weight:500}
+.med-nursing-box{background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.3);border-radius:8px;padding:10px}
+.med-nursing-box p{font-size:clamp(10px,1.05vw,13px);line-height:1.7;color:var(--text)}
+.med-back-btn{display:flex;align-items:center;gap:6px;padding:6px 11px;margin-bottom:9px;background:var(--card);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:clamp(10px,1.05vw,13px);font-weight:500;color:var(--muted);transition:all .2s;min-height:32px;box-shadow:none}
+.med-back-btn:hover{color:var(--accent);border-color:var(--accent)}
+.med-no-results{text-align:center;padding:18px 12px;color:var(--muted)}
+.med-no-results .med-no-results-icon{font-size:28px;display:block;margin-bottom:6px}
+.med-no-results p{font-size:clamp(10px,1.05vw,12px)}
+.med-search-hint{text-align:center;padding:14px;color:var(--muted);font-size:clamp(10px,1.05vw,12px)}
+.med-search-hint .hint-icon{font-size:28px;display:block;margin-bottom:5px}
+.add-med-toggle{width:100%;padding:8px;background:rgba(37,99,235,.08);color:var(--accent);border:2px dashed var(--accent);border-radius:8px;cursor:pointer;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;font-size:clamp(10px,1.1vw,13px);min-height:36px;box-shadow:none;margin-bottom:8px;transition:all .2s;font-family:inherit}
+.add-med-toggle:hover{background:var(--accent);color:#fff}
+.add-med-form{background:var(--accent-light);border:1px solid var(--accent);border-radius:9px;padding:11px;margin-bottom:8px;display:none}
+.add-med-form.visible{display:block}
+.add-med-form h4{font-size:clamp(10px,1.1vw,13px);font-weight:700;color:var(--accent);margin-bottom:8px}
+.add-med-form input,.add-med-form select,.add-med-form textarea{width:100%;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:clamp(10px,1.05vw,13px);font-family:inherit;margin-bottom:5px;min-height:auto}
+.add-med-form textarea{min-height:42px;resize:vertical}
+.add-med-form input:focus,.add-med-form select:focus,.add-med-form textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-light)}
+.add-med-form label{font-size:clamp(8px,.9vw,10px);font-weight:600;color:var(--muted);display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px}
+.add-med-form-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.add-med-btn-row{display:flex;gap:6px;margin-top:3px}
+.add-med-btn-row button{flex:1;font-size:clamp(10px,1.1vw,13px);min-height:34px;padding:7px}
+.custom-meds-badge{background:rgba(22,163,74,.15);color:var(--success);border-radius:4px;padding:1px 6px;font-size:clamp(8px,.9vw,10px);font-weight:600;margin-left:4px}
+.photo-upload-container{margin-top:9px}
+.photo-upload-btn{width:100%;padding:9px;background:var(--accent-light);color:var(--accent);border:2px dashed var(--accent);border-radius:8px;cursor:pointer;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;font-size:clamp(11px,1.15vw,14px)}
+.photo-upload-btn:hover{background:var(--accent);color:#fff}
+#photoInput{display:none}
+.photo-preview-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:7px;margin-top:9px}
+.photo-preview{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;background:var(--border)}
+.photo-preview img{width:100%;height:100%;object-fit:cover}
+.photo-delete{position:absolute;top:2px;right:2px;background:var(--danger);color:#fff;border:none;border-radius:50%;width:20px;height:20px;min-width:20px;min-height:20px;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px}
+.tab-container{display:flex;gap:6px;margin-bottom:11px;border-bottom:2px solid var(--border)}
+.tab{padding:8px 13px;background:transparent;border:none;border-bottom:3px solid transparent;cursor:pointer;font-weight:500;font-size:clamp(11px,1.15vw,14px);color:var(--muted);transition:all .2s;min-height:auto;box-shadow:none;font-family:inherit}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+@media(max-width:900px){.ipad-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.timer-presets{grid-template-columns:repeat(2,1fr)}.badge{display:none}}
+@media(max-width:380px){.add-med-form-row{grid-template-columns:1fr}}
 </style>
-</head>
-<body>
+</head><body>
 <canvas id="confetti-canvas"></canvas>
 <div class="container">
   <header>
@@ -386,27 +201,16 @@ textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px 
     </div>
     <button id="themeBtn">🌙</button>
   </header>
-
   <div class="graduation-card">
     <h2>🎓 Graduation Countdown</h2>
     <div class="countdown" id="graduationCountdown">Loading...</div>
     <div class="subtitle">Days until you become a Registered Nurse!</div>
     <div class="grad-date">🗓️ Target: December 5, 2026</div>
   </div>
-
   <div class="grid">
-    <div class="card">
-      <h3>Tasks This Week</h3>
-      <div class="stat" id="weekTaskCount">0</div>
-      <div class="stat-label">Total tasks</div>
-    </div>
-    <div class="card">
-      <h3>Completed Today</h3>
-      <div class="stat" id="completedCount">0</div>
-      <div class="stat-label">Tasks done</div>
-    </div>
+    <div class="card"><h3>Tasks This Week</h3><div class="stat" id="weekTaskCount">0</div><div class="stat-label">Total tasks</div></div>
+    <div class="card"><h3>Completed Today</h3><div class="stat" id="completedCount">0</div><div class="stat-label">Tasks done</div></div>
   </div>
-
   <div class="ipad-grid">
     <div>
       <div class="card">
@@ -418,23 +222,14 @@ textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px 
         </div>
         <div class="task-form">
           <input type="text" id="taskInput" placeholder="Enter task description...">
-          <select id="taskSubject">
-            <option>Pharmacology</option><option>Med-Surg</option><option>Fundamentals</option>
-            <option>Mental Health</option><option>Pediatrics</option><option>OB/GYN</option>
-            <option>Clinical</option><option>Study</option><option>Personal</option>
-          </select>
-          <select id="taskPriority">
-            <option value="high">High Priority</option>
-            <option value="medium">Medium Priority</option>
-            <option value="low">Low Priority</option>
-          </select>
+          <select id="taskSubject"><option>Pharmacology</option><option>Med-Surg</option><option>Fundamentals</option><option>Mental Health</option><option>Pediatrics</option><option>OB/GYN</option><option>Clinical</option><option>Study</option><option>Personal</option></select>
+          <select id="taskPriority"><option value="high">High Priority</option><option value="medium">Medium Priority</option><option value="low">Low Priority</option></select>
           <input type="date" id="taskDate">
           <button id="addTaskBtn" class="btn-primary">Add Task</button>
         </div>
         <div id="taskList"></div>
       </div>
-
-      <div class="card" style="margin-top:24px;">
+      <div class="card" style="margin-top:var(--sp)">
         <h3>⏱️ Pomodoro Timer</h3>
         <div class="timer-presets">
           <button class="preset-btn active" data-minutes="25">25 min</button>
@@ -454,7 +249,6 @@ textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px 
         </div>
       </div>
     </div>
-
     <div>
       <div class="card">
         <div class="calendar-header">
@@ -465,76 +259,41 @@ textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px 
         <div id="calendar" class="calendar-grid"></div>
         <div id="dayEvents"></div>
       </div>
-
-      <!-- MEDICATION DATABASE -->
-      <div class="card" style="margin-top:24px;">
+      <div class="card" style="margin-top:var(--sp)">
         <div class="med-section-header">
-          <h3 style="margin:0;">💊 Medication Database <span class="custom-meds-badge" id="customMedsBadge" style="display:none"></span></h3>
+          <h3 style="margin:0">💊 Medication Database <span class="custom-meds-badge" id="customMedsBadge" style="display:none"></span></h3>
           <span class="med-count-badge" id="medCountBadge">65 Meds</span>
         </div>
-
-        <!-- ADD YOUR OWN MED BUTTON -->
         <button class="add-med-toggle" id="addMedToggleBtn">➕ Add Your Own Medication</button>
         <div class="add-med-form" id="addMedForm">
           <h4>📋 Add Custom Medication</h4>
           <div class="add-med-form-row">
-            <div>
-              <label>Drug Name *</label>
-              <input type="text" id="newMedName" placeholder="e.g., Metronidazole">
-            </div>
-            <div>
-              <label>Brand Name</label>
-              <input type="text" id="newMedBrand" placeholder="e.g., Flagyl">
-            </div>
+            <div><label>Drug Name *</label><input type="text" id="newMedName" placeholder="e.g., Metronidazole"></div>
+            <div><label>Brand Name</label><input type="text" id="newMedBrand" placeholder="e.g., Flagyl"></div>
           </div>
           <div class="add-med-form-row">
-            <div>
-              <label>Drug Class *</label>
-              <input type="text" id="newMedClass" placeholder="e.g., Antibiotic – Nitroimidazole">
-            </div>
-            <div>
-              <label>Category *</label>
-              <select id="newMedCategory">
-                <option value="Analgesic">Pain</option>
-                <option value="Antibiotic">Antibiotic</option>
-                <option value="Anticoagulant">Blood/Anticoagulant</option>
-                <option value="Cardiac">Cardiac</option>
-                <option value="Antidiabetic">Diabetes</option>
-                <option value="Respiratory">Respiratory</option>
-                <option value="Psych">Psych</option>
-                <option value="GI">GI</option>
-                <option value="Neuro">Neuro</option>
-                <option value="Endocrine">Endocrine</option>
-                <option value="Steroid">Steroid</option>
-              </select>
+            <div><label>Drug Class *</label><input type="text" id="newMedClass" placeholder="e.g., Antibiotic"></div>
+            <div><label>Category *</label>
+              <select id="newMedCategory"><option value="Analgesic">Pain</option><option value="Antibiotic">Antibiotic</option><option value="Anticoagulant">Blood</option><option value="Cardiac">Cardiac</option><option value="Antidiabetic">Diabetes</option><option value="Respiratory">Respiratory</option><option value="Psych">Psych</option><option value="GI">GI</option><option value="Neuro">Neuro</option><option value="Endocrine">Endocrine</option><option value="Steroid">Steroid</option></select>
             </div>
           </div>
-          <label>Indications</label>
-          <input type="text" id="newMedIndications" placeholder="What is it used for?">
-          <label>Route</label>
-          <input type="text" id="newMedRoute" placeholder="e.g., PO, IV, SubQ">
-          <label>Dosage</label>
-          <textarea id="newMedDosage" placeholder="Dosage information..."></textarea>
-          <label>Side Effects (comma-separated)</label>
-          <input type="text" id="newMedSideEffects" placeholder="e.g., Nausea, Headache, Dizziness">
-          <label>Nursing Considerations</label>
-          <textarea id="newMedNursing" placeholder="Key nursing considerations..."></textarea>
-          <label>Contraindications (comma-separated)</label>
-          <input type="text" id="newMedContra" placeholder="e.g., Renal failure, Pregnancy">
-          <label>Antidote (if applicable)</label>
-          <input type="text" id="newMedAntidote" placeholder="e.g., Naloxone, N-acetylcysteine">
+          <label>Indications</label><input type="text" id="newMedIndications" placeholder="What is it used for?">
+          <label>Route</label><input type="text" id="newMedRoute" placeholder="e.g., PO, IV, SubQ">
+          <label>Dosage</label><textarea id="newMedDosage" placeholder="Dosage information..."></textarea>
+          <label>Side Effects (comma-separated)</label><input type="text" id="newMedSideEffects" placeholder="e.g., Nausea, Headache">
+          <label>Nursing Considerations</label><textarea id="newMedNursing" placeholder="Key nursing considerations..."></textarea>
+          <label>Contraindications (comma-separated)</label><input type="text" id="newMedContra" placeholder="e.g., Renal failure, Pregnancy">
+          <label>Antidote (if applicable)</label><input type="text" id="newMedAntidote" placeholder="e.g., Naloxone">
           <div class="add-med-btn-row">
             <button id="saveNewMedBtn" class="btn-primary">💾 Save Medication</button>
             <button id="cancelNewMedBtn">Cancel</button>
           </div>
         </div>
-
         <div class="med-search-wrapper">
           <span class="med-search-icon">🔍</span>
           <input type="text" id="medSearch" placeholder="Search by name, brand, or drug class..." autocomplete="off">
           <button class="med-clear-btn" id="medClearBtn">✕</button>
         </div>
-
         <div class="med-category-filters" id="medCategoryFilters">
           <button class="med-cat-btn active" data-cat="all">All</button>
           <button class="med-cat-btn" data-cat="Analgesic">Pain</button>
@@ -549,12 +308,10 @@ textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px 
           <button class="med-cat-btn" data-cat="Endocrine">Endocrine</button>
           <button class="med-cat-btn" data-cat="Steroid">Steroids</button>
         </div>
-
         <div class="med-results" id="medResults"></div>
       </div>
     </div>
   </div>
-
   <div class="ipad-grid">
     <div class="card">
       <h3>💉 Calculators</h3>
@@ -568,28 +325,21 @@ textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px 
           <div class="calc-input"><label>Available Strength (mg)</label><input type="number" id="available" placeholder="e.g., 250" step="0.01"></div>
           <div class="calc-input"><label>Available Volume (mL)</label><input type="number" id="volume" placeholder="e.g., 5" step="0.01"></div>
         </div>
-        <button id="calculateBtn" class="btn-primary" style="width:100%;">Calculate Dose</button>
+        <button id="calculateBtn" class="btn-primary" style="width:100%">Calculate Dose</button>
         <div id="doseOutput"></div>
       </div>
       <div id="ivTab" class="tab-content">
         <div class="calc-grid">
           <div class="calc-input"><label>Total Volume (mL)</label><input type="number" id="ivVolume" placeholder="e.g., 1000" step="1"></div>
           <div class="calc-input"><label>Time (hours)</label><input type="number" id="ivTime" placeholder="e.g., 8" step="0.1"></div>
-          <div class="calc-input">
-            <label>Drop Factor (gtts/mL)</label>
-            <select id="dropFactor">
-              <option value="10">10 gtts/mL (Blood tubing)</option>
-              <option value="15">15 gtts/mL (Standard)</option>
-              <option value="20" selected>20 gtts/mL (Standard)</option>
-              <option value="60">60 gtts/mL (Microdrip)</option>
-            </select>
+          <div class="calc-input"><label>Drop Factor (gtts/mL)</label>
+            <select id="dropFactor"><option value="10">10 gtts/mL (Blood)</option><option value="15">15 gtts/mL (Standard)</option><option value="20" selected>20 gtts/mL (Standard)</option><option value="60">60 gtts/mL (Microdrip)</option></select>
           </div>
         </div>
-        <button id="calculateIVBtn" class="btn-primary" style="width:100%;">Calculate IV Rate</button>
+        <button id="calculateIVBtn" class="btn-primary" style="width:100%">Calculate IV Rate</button>
         <div id="ivOutput"></div>
       </div>
     </div>
-
     <div class="card">
       <h3>📓 Quick Notes</h3>
       <textarea id="quickNotes" placeholder="Type your notes here..."></textarea>
@@ -598,11 +348,10 @@ textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px 
         <input type="file" id="photoInput" accept="image/*" multiple>
         <div class="photo-preview-container" id="photoPreviewContainer"></div>
       </div>
-      <button id="saveNotesBtn" class="btn-primary" style="width:100%;margin-top:14px;">Save Notes</button>
+      <button id="saveNotesBtn" class="btn-primary" style="width:100%;margin-top:10px">Save Notes</button>
     </div>
   </div>
-
-  <div class="card" style="margin-bottom:28px;">
+  <div class="card" style="margin-bottom:28px">
     <h3>✅ Shift Checklist</h3>
     <div id="checklist" class="checklist">
       <div class="checklist-item"><input type="checkbox" id="check1"><label for="check1">Review patient charts</label></div>
@@ -612,796 +361,166 @@ textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px 
       <div class="checklist-item"><input type="checkbox" id="check5"><label for="check5">Document assessments</label></div>
       <div class="checklist-item"><input type="checkbox" id="check6"><label for="check6">Hand-off report</label></div>
     </div>
-    <button id="resetChecklistBtn" style="margin-top:14px;">Reset Checklist</button>
+    <button id="resetChecklistBtn" style="margin-top:10px">Reset Checklist</button>
   </div>
-</div>
-
-<script>
-(function() {
-  'use strict';
-
-  const TASKS_KEY = 'nursingTasks';
-  const NOTES_KEY = 'nursingNotes';
-  const PHOTOS_KEY = 'nursingPhotos';
-  const CHECKLIST_KEY = 'nursingChecklist';
-  const TIMER_PRESET_KEY = 'timerPreset';
-  const CUSTOM_MEDS_KEY = 'nursingCustomMeds';
-
-  let tasks = JSON.parse(localStorage.getItem(TASKS_KEY)) || [];
-  let notePhotos = JSON.parse(localStorage.getItem(PHOTOS_KEY)) || [];
-  let customMeds = JSON.parse(localStorage.getItem(CUSTOM_MEDS_KEY)) || [];
-  let currentFilter = 'all';
-  let timerSeconds = 25 * 60;
-  let timerInterval = null;
-  let timerPresetMinutes = 25;
-  let currentDate = new Date();
-  let selectedDate = null;
-  let selectedMed = null;
-  let medActiveCat = 'all';
-  let medSearchQuery = '';
-
-  // ── GRADUATION COUNTDOWN ──
-  function updateGraduationCountdown() {
-    var now = new Date();
-    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var grad  = new Date(2026, 11, 5);
-    var diffDays = Math.round((grad - today) / (1000 * 60 * 60 * 24));
-    var el = document.getElementById('graduationCountdown');
-    if (diffDays > 0) {
-      el.innerText = diffDays + (diffDays === 1 ? ' Day' : ' Days');
-    } else if (diffDays === 0) {
-      el.innerText = '🎉 Today is the Day!';
-      showConfetti();
-    } else {
-      el.innerText = '🎓 Congratulations, RN!';
-    }
-  }
-
-  // ── BUILT-IN MEDICATIONS ──
-  const builtInMeds = [
-    { name:"Acetaminophen", brand:"Tylenol", class:"Analgesic, Antipyretic", category:"Analgesic", icon:"🌡️",
-      indications:"Mild-moderate pain, fever reduction", route:"PO, PR, IV",
-      dosage:"Adults: 325–650mg q4-6h PO; max 4000mg/day (3000mg in elderly/liver risk). IV: 650–1000mg q6-8h.",
-      sideEffects:["Nausea (rare at normal doses)","Rash","Hepatotoxicity (overdose)"],
-      nursing:"Monitor LFTs with chronic use. Do not exceed max dose. Check all combo products for hidden acetaminophen. Antidote: N-acetylcysteine.",
-      contraindications:"Severe hepatic impairment, alcohol use disorder", antidote:"N-acetylcysteine (NAC)" },
-    { name:"Ibuprofen", brand:"Advil, Motrin", class:"NSAID", category:"Analgesic", icon:"💊",
-      indications:"Pain, fever, inflammation, dysmenorrhea",route:"PO",
-      dosage:"200–800mg q6-8h with food; max 3200mg/day",
-      sideEffects:["GI upset/ulceration","Renal impairment","Hypertension","Increased bleeding risk"],
-      nursing:"Give with food or milk. Monitor renal function and BP. Avoid in patients with peptic ulcer disease.",
-      contraindications:"Active GI bleed, renal failure, 3rd trimester pregnancy, CABG perioperative" },
-    { name:"Morphine", brand:"MS Contin, Roxanol", class:"Opioid Analgesic (Schedule II)", category:"Analgesic", icon:"💉",
-      indications:"Moderate–severe pain, acute MI, pulmonary edema",route:"IV, IM, SubQ, PO",
-      dosage:"IV: 2–4mg q3-4h PRN; PO: 10–30mg q4h (IR); ER: 15–30mg q8-12h",
-      sideEffects:["Respiratory depression","Constipation","Sedation","Nausea","Miosis","Urinary retention"],
-      nursing:"Hold if RR <12. Have naloxone available. Monitor O2 sat. Implement bowel regimen. Assess pain level 30–60 min post-dose.",
-      contraindications:"Respiratory depression, paralytic ileus, acute asthma", antidote:"Naloxone (Narcan)" },
-    { name:"Oxycodone", brand:"OxyContin, Percocet", class:"Opioid Analgesic (Schedule II)", category:"Analgesic", icon:"💉",
-      indications:"Moderate-severe pain",route:"PO",
-      dosage:"IR: 5–15mg q4-6h PRN; ER: 10–40mg q12h",
-      sideEffects:["Respiratory depression","Constipation","Sedation","Dizziness","Nausea"],
-      nursing:"Monitor RR, pain level, sedation scale. Risk of addiction/misuse. Never crush ER form. Bowel regimen needed.",
-      contraindications:"Respiratory depression, GI obstruction", antidote:"Naloxone (Narcan)" },
-    { name:"Hydromorphone", brand:"Dilaudid", class:"Opioid Analgesic (Schedule II)", category:"Analgesic", icon:"💉",
-      indications:"Moderate-severe pain; 5–10x more potent than morphine",route:"IV, IM, PO",
-      dosage:"IV: 0.2–0.6mg q2-3h; PO: 2–4mg q4-6h",
-      sideEffects:["Respiratory depression","Sedation","Hypotension","Constipation"],
-      nursing:"High-alert medication. Very potent — verify dose carefully. Monitor RR closely. Have naloxone ready.",
-      contraindications:"Respiratory depression, acute asthma", antidote:"Naloxone (Narcan)" },
-    { name:"Tramadol", brand:"Ultram", class:"Opioid-like Analgesic (Schedule IV)", category:"Analgesic", icon:"💊",
-      indications:"Moderate pain",route:"PO",
-      dosage:"50–100mg q4-6h; max 400mg/day (300mg in elderly)",
-      sideEffects:["Dizziness","Constipation","Nausea","Seizure risk","Serotonin syndrome"],
-      nursing:"Lower seizure threshold — caution with seizure hx. Avoid with SSRIs (serotonin syndrome risk). Less respiratory depression than opioids.",
-      contraindications:"Seizure disorder, MAOIs, severe hepatic/renal impairment" },
-    { name:"Amoxicillin", brand:"Amoxil", class:"Antibiotic – Penicillin", category:"Antibiotic", icon:"🦠",
-      indications:"Ear, sinus, throat, UTI, H. pylori (combo)",route:"PO",
-      dosage:"250–500mg q8h or 875mg q12h; pediatric: 25–45mg/kg/day divided",
-      sideEffects:["Diarrhea","Nausea","Rash","Allergic reactions"],
-      nursing:"Ask about penicillin allergy (cross-react with cephalosporins 1–2%). Encourage complete course. Monitor for C. diff.",
-      contraindications:"Penicillin/amoxicillin allergy" },
-    { name:"Cephalexin", brand:"Keflex", class:"Antibiotic – Cephalosporin (1st gen)", category:"Antibiotic", icon:"🦠",
-      indications:"Skin infections, UTI, strep throat, bone infections",route:"PO",
-      dosage:"250–500mg q6h or 500mg q12h; max 4g/day",
-      sideEffects:["GI upset","Rash","Diarrhea"],
-      nursing:"Caution with PCN allergy (cross-reactivity <2%). Complete full course.",
-      contraindications:"Cephalosporin allergy; use caution with PCN allergy" },
-    { name:"Azithromycin", brand:"Zithromax, Z-Pack", class:"Antibiotic – Macrolide", category:"Antibiotic", icon:"🦠",
-      indications:"Community pneumonia, STIs, atypical bacteria, skin infections",route:"PO, IV",
-      dosage:"500mg day 1 then 250mg days 2–5 (Z-Pack); or 500mg daily x3",
-      sideEffects:["GI upset","QT prolongation","Hearing loss (high dose)","Hepatotoxicity"],
-      nursing:"Monitor ECG in at-risk patients (QT prolongation). Take on empty stomach for better absorption. Avoid antacids.",
-      contraindications:"QT prolongation, liver disease, macrolide allergy" },
-    { name:"Ciprofloxacin", brand:"Cipro", class:"Antibiotic – Fluoroquinolone", category:"Antibiotic", icon:"🦠",
-      indications:"UTI, respiratory, GI infections, anthrax prophylaxis",route:"PO, IV",
-      dosage:"250–750mg q12h PO; 200–400mg q8-12h IV",
-      sideEffects:["Tendon rupture","Peripheral neuropathy","QT prolongation","Photosensitivity","C. diff"],
-      nursing:"Avoid in patients <18 years (unless life-threatening), pregnant. No dairy or antacids within 2h. Encourage fluids.",
-      contraindications:"Age <18 (relative), pregnancy, tendon disorders, QT prolongation" },
-    { name:"Metronidazole", brand:"Flagyl", class:"Antibiotic – Nitroimidazole", category:"Antibiotic", icon:"🦠",
-      indications:"Anaerobic infections, C. diff, BV, H. pylori (combo), protozoal infections",route:"PO, IV",
-      dosage:"250–500mg q6-8h PO; 500mg q6-8h IV",
-      sideEffects:["Metallic taste","Nausea","Peripheral neuropathy","Disulfiram-like reaction with alcohol"],
-      nursing:"Avoid alcohol during and 48h after treatment (severe disulfiram reaction). Metallic taste is common and expected.",
-      contraindications:"First trimester pregnancy, alcohol use with treatment" },
-    { name:"Clindamycin", brand:"Cleocin", class:"Antibiotic – Lincosamide", category:"Antibiotic", icon:"🦠",
-      indications:"Serious anaerobic/staphylococcal infections, skin infections, bone infections",route:"PO, IV, topical",
-      dosage:"150–450mg q6h PO; 600–900mg q8h IV",
-      sideEffects:["Diarrhea","C. diff (high risk)","GI upset","Rash"],
-      nursing:"Highest risk antibiotic for C. diff. Monitor for diarrhea. Infuse IV over ≥30 min.",
-      contraindications:"History of C. diff or pseudomembranous colitis, hypersensitivity" },
-    { name:"Vancomycin", brand:"Vancocin", class:"Antibiotic – Glycopeptide", category:"Antibiotic", icon:"🦠",
-      indications:"MRSA, C. diff (PO only), serious Gram+ infections",route:"IV, PO (C. diff only)",
-      dosage:"IV: 15–20mg/kg q8-12h (dose by levels/AUC); PO: 125–500mg q6h for C. diff",
-      sideEffects:["Nephrotoxicity","Red Man Syndrome (rapid infusion)","Ototoxicity","Thrombophlebitis"],
-      nursing:"Monitor vancomycin trough/AUC levels, renal function (SCr), and hearing. Infuse over ≥60 min. Pre-medicate with antihistamine if Red Man Syndrome occurs.",
-      contraindications:"Allergy to vancomycin" },
-    { name:"Trimethoprim-Sulfamethoxazole", brand:"Bactrim, Septra", class:"Antibiotic – Sulfonamide", category:"Antibiotic", icon:"🦠",
-      indications:"UTI, MRSA skin infections, PCP prophylaxis, Pneumocystis pneumonia",route:"PO, IV",
-      dosage:"1 DS tablet q12h for uncomplicated UTI x3–5 days",
-      sideEffects:["Rash/photosensitivity","Hyperkalemia","Renal impairment","Blood dyscrasia","Stevens-Johnson (rare)"],
-      nursing:"Sulfa allergy? Avoid. Encourage fluids. Monitor K+ and renal function. Check G6PD status.",
-      contraindications:"Sulfa allergy, severe renal impairment, folate deficiency, G6PD deficiency, pregnancy near term" },
-    { name:"Lisinopril", brand:"Zestril, Prinivil", class:"ACE Inhibitor", category:"Cardiac", icon:"❤️",
-      indications:"Hypertension, heart failure, post-MI renal protection, diabetic nephropathy",route:"PO",
-      dosage:"HTN: 10mg daily initially; range 10–40mg/day. HF: 5–40mg/day.",
-      sideEffects:["Dry cough","Dizziness/first-dose hypotension","Hyperkalemia","Angioedema"],
-      nursing:"Monitor BP, K+, creatinine. Watch for angioedema (stop immediately). Avoid in pregnancy (teratogenic). Hold if K+ >5.5.",
-      contraindications:"Pregnancy, angioedema history, bilateral renal artery stenosis, concurrent aliskiren (DM)" },
-    { name:"Metoprolol", brand:"Lopressor (tartrate), Toprol-XL (succinate)", class:"Beta-1 Blocker (Cardioselective)", category:"Cardiac", icon:"❤️",
-      indications:"HTN, angina, HF (succinate), post-MI, afib rate control",route:"PO, IV",
-      dosage:"PO HTN: 25–100mg q12h (tartrate) or 25–200mg daily (succinate). IV: 2.5–5mg q2min x3 doses.",
-      sideEffects:["Bradycardia","Hypotension","Fatigue","Bronchospasm (high dose)","Masking hypoglycemia"],
-      nursing:"Hold if HR <60 or SBP <90. Do not abruptly discontinue. Monitor glucose in diabetics.",
-      contraindications:"Severe bradycardia, heart block, decompensated HF, cardiogenic shock" },
-    { name:"Carvedilol", brand:"Coreg", class:"Alpha/Beta Blocker", category:"Cardiac", icon:"❤️",
-      indications:"Heart failure, HTN, post-MI LV dysfunction",route:"PO",
-      dosage:"HF: start 3.125mg q12h; titrate to 25mg q12h",
-      sideEffects:["Dizziness","Hypotension","Bradycardia","Weight gain","Fluid retention"],
-      nursing:"Take with food. Titrate slowly. Monitor BP and HR. May mask hypoglycemia.",
-      contraindications:"Severe bradycardia, cardiogenic shock, bronchial asthma, heart block" },
-    { name:"Amlodipine", brand:"Norvasc", class:"Calcium Channel Blocker (Dihydropyridine)", category:"Cardiac", icon:"❤️",
-      indications:"HTN, chronic stable angina, vasospastic angina",route:"PO",
-      dosage:"2.5–10mg once daily",
-      sideEffects:["Peripheral edema","Headache","Flushing","Reflex tachycardia"],
-      nursing:"Monitor BP and peripheral edema. Edema is due to vasodilation, not fluid overload — diuretics usually not helpful.",
-      contraindications:"Hypersensitivity, severe aortic stenosis" },
-    { name:"Furosemide", brand:"Lasix", class:"Loop Diuretic", category:"Cardiac", icon:"💧",
-      indications:"Edema (HF, renal, hepatic), HTN, hypercalcemia, pulmonary edema",route:"PO, IV, IM",
-      dosage:"PO: 20–80mg/day; IV: 20–80mg (may repeat q6-8h); max 600mg/day",
-      sideEffects:["Hypokalemia","Hyponatremia","Dehydration","Hypotension","Ototoxicity (rapid IV)","Hyperglycemia"],
-      nursing:"Monitor daily weights, I&O, electrolytes, BP. Give in morning. IV infuse no faster than 4mg/min. Potassium replacement often needed.",
-      contraindications:"Anuria, sulfa allergy (relative), electrolyte depletion" },
-    { name:"Spironolactone", brand:"Aldactone", class:"Potassium-Sparing Diuretic / Aldosterone Antagonist", category:"Cardiac", icon:"💧",
-      indications:"Heart failure, ascites, HTN, hyperaldosteronism",route:"PO",
-      dosage:"25–50mg daily; HF: 12.5–25mg daily",
-      sideEffects:["Hyperkalemia","Gynecomastia","Irregular periods","Dizziness"],
-      nursing:"Monitor K+ levels closely. Avoid potassium supplements and NSAID use. Used in HF to improve survival.",
-      contraindications:"Hyperkalemia, renal failure, Addison's disease, anuria" },
-    { name:"Digoxin", brand:"Lanoxin", class:"Cardiac Glycoside", category:"Cardiac", icon:"❤️",
-      indications:"HF (with reduced EF), afib rate control",route:"PO, IV",
-      dosage:"0.125–0.25mg daily; adjust for renal function. Therapeutic level: 0.5–2 ng/mL.",
-      sideEffects:["Arrhythmias","Nausea/vomiting","Visual changes (yellow-green halos)","Fatigue","Bradycardia"],
-      nursing:"Monitor HR (hold if <60). Check serum dig level, K+ (hypokalemia increases toxicity). Narrow therapeutic index. Antidote: Digibind.",
-      contraindications:"Ventricular fibrillation, hypersensitivity", antidote:"Digoxin immune Fab (Digibind/DigiFab)" },
-    { name:"Atorvastatin", brand:"Lipitor", class:"Statin (HMG-CoA Reductase Inhibitor)", category:"Cardiac", icon:"❤️",
-      indications:"Hyperlipidemia, CVD risk reduction",route:"PO",
-      dosage:"10–80mg once daily (can take any time of day)",
-      sideEffects:["Myopathy/rhabdomyolysis","Elevated LFTs","Headache","GI upset"],
-      nursing:"Monitor lipid panel and LFTs. Report muscle pain (check CK). Avoid grapefruit juice. Teratogenic — contraindicated in pregnancy.",
-      contraindications:"Active liver disease, pregnancy, breastfeeding" },
-    { name:"Warfarin", brand:"Coumadin", class:"Anticoagulant (Vitamin K Antagonist)", category:"Anticoagulant", icon:"🩸",
-      indications:"DVT/PE treatment/prevention, afib, mechanical heart valves, stroke prevention",route:"PO",
-      dosage:"Individualized by INR; typical 2–10mg/day. Target INR 2–3 (2.5–3.5 for mechanical valves).",
-      sideEffects:["Bleeding","Bruising","Hair loss","Purple toe syndrome"],
-      nursing:"Monitor INR. Consistent Vitamin K diet. Many drug interactions. Antidote: Vitamin K (phytonadione), FFP (emergency).",
-      contraindications:"Active bleeding, pregnancy, severe hypertension, hemorrhagic stroke", antidote:"Vitamin K (phytonadione), FFP" },
-    { name:"Heparin", brand:"Unfractionated Heparin", class:"Anticoagulant (Unfractionated)", category:"Anticoagulant", icon:"🩸",
-      indications:"DVT/PE treatment, ACS, surgical prophylaxis, line patency",route:"IV, SubQ",
-      dosage:"DVT/PE: weight-based IV protocol. Prophylaxis: 5000 units SubQ q8-12h.",
-      sideEffects:["Bleeding","HIT (Heparin-Induced Thrombocytopenia)","Thrombosis (with HIT)"],
-      nursing:"Monitor aPTT (therapeutic: 60–100s). Never give IM. Monitor platelet counts (HIT risk days 5–10). Antidote: Protamine sulfate.",
-      contraindications:"Active bleeding, HIT history, severe thrombocytopenia", antidote:"Protamine sulfate" },
-    { name:"Enoxaparin", brand:"Lovenox", class:"Anticoagulant (LMWH)", category:"Anticoagulant", icon:"🩸",
-      indications:"DVT/PE treatment, prophylaxis, ACS",route:"SubQ",
-      dosage:"Treatment: 1mg/kg SubQ q12h or 1.5mg/kg q24h. Prophylaxis: 30–40mg SubQ daily.",
-      sideEffects:["Bleeding","Bruising at injection site","Thrombocytopenia (less HIT than UFH)"],
-      nursing:"Administer in abdomen. Rotate sites. Cannot use anti-Xa levels routinely (preferred over aPTT). Renal dose adjustment needed.",
-      contraindications:"Active bleeding, HIT, severe renal impairment (CrCl <30)", antidote:"Protamine sulfate (partial reversal)" },
-    { name:"Aspirin", brand:"Bayer, Ecotrin", class:"Antiplatelet / NSAID", category:"Anticoagulant", icon:"🩸",
-      indications:"Acute MI/stroke, antiplatelet (81mg), pain/fever (higher doses)",route:"PO",
-      dosage:"Cardioprotection: 81mg daily. Acute MI: 325mg chewed immediately. Analgesia: 325–650mg q4-6h.",
-      sideEffects:["GI bleeding","Tinnitus (toxicity)","Reye syndrome (children)","Allergic reactions"],
-      nursing:"Give with food. Monitor for bleeding. Never use in children with viral illness. Antidote for OD: dialysis, activated charcoal.",
-      contraindications:"Active bleeding, children with viral illness, 3rd trimester pregnancy (high dose), anticoagulant therapy (relative)" },
-    { name:"Apixaban", brand:"Eliquis", class:"Anticoagulant (Factor Xa Inhibitor)", category:"Anticoagulant", icon:"🩸",
-      indications:"DVT/PE treatment/prevention, afib stroke prevention, post-surgical prophylaxis",route:"PO",
-      dosage:"A-fib: 5mg BID (2.5mg BID if 2 of 3: age ≥80, weight ≤60kg, Cr ≥1.5). DVT/PE: 10mg BID x7d then 5mg BID.",
-      sideEffects:["Bleeding","Bruising"],
-      nursing:"No routine coagulation monitoring needed. No antidote was available until Andexxa (andexanet alfa). Crush and mix with water for NG tube. Renal monitoring.",
-      contraindications:"Active bleeding, mechanical heart valves", antidote:"Andexanet alfa (Andexxa)" },
-    { name:"Metformin", brand:"Glucophage", class:"Antidiabetic – Biguanide", category:"Antidiabetic", icon:"🍭",
-      indications:"Type 2 Diabetes Mellitus",route:"PO",
-      dosage:"Initial 500mg BID with meals or 850mg daily; max 2550mg/day",
-      sideEffects:["GI upset (nausea, diarrhea, metallic taste)","Lactic acidosis (rare, mainly with renal impairment)","B12 deficiency (long-term)"],
-      nursing:"Give with meals to reduce GI side effects. Monitor renal function. Hold 48h before/after IV contrast dye. No hypoglycemia risk (monotherapy).",
-      contraindications:"eGFR <30, acute illness/sepsis, IV contrast use, metabolic acidosis, excessive alcohol" },
-    { name:"Glipizide", brand:"Glucotrol", class:"Antidiabetic – Sulfonylurea", category:"Antidiabetic", icon:"🍭",
-      indications:"Type 2 Diabetes Mellitus",route:"PO",
-      dosage:"2.5–20mg/day (IR) 30 min before meals; XL: 5–20mg daily with breakfast",
-      sideEffects:["Hypoglycemia","Weight gain","GI upset"],
-      nursing:"High risk for hypoglycemia. Monitor glucose. Give 30 min before meals. Instruct patient to eat after taking.",
-      contraindications:"Type 1 DM, DKA, sulfa allergy, renal/hepatic failure" },
-    { name:"Regular Insulin", brand:"Humulin R, Novolin R", class:"Insulin – Short-acting", category:"Antidiabetic", icon:"💉",
-      indications:"Type 1 & 2 DM, DKA, hyperkalemia (with dextrose)",route:"IV, SubQ, IM",
-      dosage:"Variable; onset SubQ: 30 min, peak: 2–3h, duration: 6–8h. IV infusion for DKA/ICU.",
-      sideEffects:["Hypoglycemia","Hypokalemia","Weight gain","Injection site lipodystrophy"],
-      nursing:"Only insulin that can be given IV. Monitor glucose q1h when on drip. Have D50 ready. Rotate injection sites. Check for compatibility when mixing.",
-      contraindications:"Hypoglycemia", antidote:"Dextrose (D50W IV or orange juice PO)" },
-    { name:"Insulin Glargine", brand:"Lantus, Basaglar, Toujeo", class:"Insulin – Long-acting (Basal)", category:"Antidiabetic", icon:"💉",
-      indications:"Type 1 & 2 DM (basal coverage)",route:"SubQ only",
-      dosage:"Once daily at same time; dose individualized; onset 1-2h, no peak, duration 20–24h",
-      sideEffects:["Hypoglycemia","Injection site reactions","Weight gain"],
-      nursing:"Give SubQ ONLY — never IV. Do NOT mix with other insulins. Administer at same time daily. Lantus is clear (not cloudy like NPH).",
-      contraindications:"Hypoglycemia, IV administration" },
-    { name:"Insulin Lispro", brand:"Humalog, Admelog", class:"Insulin – Rapid-acting", category:"Antidiabetic", icon:"💉",
-      indications:"Prandial (mealtime) insulin coverage for Type 1 & 2 DM",route:"SubQ, IV (in selected settings)",
-      dosage:"Given 0–15 min before meals or immediately after; onset 15 min, peak 30–90 min, duration 3–5h",
-      sideEffects:["Hypoglycemia","Injection site reactions"],
-      nursing:"Administer right before meals. If patient not eating, hold or reduce dose. Monitor glucose 1h post-meal. Can be mixed with NPH.",
-      contraindications:"Hypoglycemia", antidote:"Dextrose (D50W IV or orange juice PO)" },
-    { name:"Semaglutide", brand:"Ozempic (SubQ), Rybelsus (PO), Wegovy (weight loss)", class:"GLP-1 Receptor Agonist", category:"Antidiabetic", icon:"🍭",
-      indications:"Type 2 DM, cardiovascular risk reduction, obesity (Wegovy)",route:"SubQ weekly, PO daily",
-      dosage:"SubQ: 0.25mg weekly x4wk then 0.5–2mg weekly. PO: 3–14mg daily.",
-      sideEffects:["Nausea","Vomiting","Diarrhea","Pancreatitis","Thyroid C-cell tumors (rat data)"],
-      nursing:"Give SubQ in abdomen, thigh, or upper arm. Rotate sites. Counsel on pancreatitis signs. Significant weight loss expected. Hold before surgeries.",
-      contraindications:"Personal/family hx of medullary thyroid carcinoma, MEN type 2, pancreatitis" },
-    { name:"Albuterol", brand:"ProAir, Ventolin, Proventil", class:"Beta-2 Agonist Bronchodilator (SABA)", category:"Respiratory", icon:"🫁",
-      indications:"Acute bronchospasm, asthma, COPD exacerbation, hyperkalemia (adjunct)",route:"Inhaled, Nebulized",
-      dosage:"MDI: 2 puffs q4-6h PRN; Nebulizer: 2.5mg in 3mL NS q20min x3 (acute), then q1-4h",
-      sideEffects:["Tachycardia","Tremor","Nervousness","Hypokalemia","Palpitations","Headache"],
-      nursing:"Monitor HR and K+. Teach correct inhaler technique. Rinse mouth after. Onset: 5–15 min. Peak: 30–60 min.",
-      contraindications:"Hypersensitivity to albuterol" },
-    { name:"Salmeterol", brand:"Serevent", class:"Beta-2 Agonist (LABA)", category:"Respiratory", icon:"🫁",
-      indications:"Maintenance of asthma & COPD (NOT for acute rescue)",route:"Inhaled",
-      dosage:"1 inhalation (50mcg) BID; must use with ICS in asthma",
-      sideEffects:["Tachycardia","Tremor","Paradoxical bronchospasm","Hypokalemia"],
-      nursing:"NEVER use for acute rescue. Must be paired with ICS in asthma (boxed warning). Rinse mouth. Teach patient it is a maintenance medication.",
-      contraindications:"Acute bronchospasm, monotherapy in asthma (without ICS)" },
-    { name:"Ipratropium", brand:"Atrovent", class:"Anticholinergic Bronchodilator", category:"Respiratory", icon:"🫁",
-      indications:"COPD maintenance, acute asthma (with albuterol), rhinorrhea",route:"Inhaled, Nebulized, Nasal spray",
-      dosage:"MDI: 2 puffs TID-QID; Nebulizer: 0.5mg q6-8h",
-      sideEffects:["Dry mouth","Constipation","Urinary retention","Blurred vision (if sprayed in eyes)","Tachycardia"],
-      nursing:"Avoid spraying in eyes. Caution with BPH and narrow-angle glaucoma. Not for rescue — slower onset than albuterol.",
-      contraindications:"Hypersensitivity to atropine or ipratropium, peanut allergy (older formulations)" },
-    { name:"Fluticasone", brand:"Flovent (ICS), Flonase (nasal)", class:"Corticosteroid (Inhaled)", category:"Respiratory", icon:"🫁",
-      indications:"Asthma maintenance, allergic rhinitis",route:"Inhaled, Nasal",
-      dosage:"Inhaled: 88–440mcg BID; Nasal: 2 sprays each nostril once daily",
-      sideEffects:["Oral thrush (candidiasis)","Hoarseness","Adrenal suppression (high doses)"],
-      nursing:"Rinse mouth and gargle after use to prevent thrush. Not a rescue medication. Monitor for adrenal suppression with long-term high-dose use.",
-      contraindications:"Acute bronchospasm (not for rescue)" },
-    { name:"Montelukast", brand:"Singulair", class:"Leukotriene Receptor Antagonist", category:"Respiratory", icon:"🫁",
-      indications:"Asthma prophylaxis, seasonal allergic rhinitis, exercise-induced bronchoconstriction",route:"PO",
-      dosage:"Adults: 10mg once daily in evening. Children: 5mg (6–14yr), 4mg granules (<5yr).",
-      sideEffects:["Headache","GI upset","Neuropsychiatric effects (depression, suicidal thoughts — boxed warning)"],
-      nursing:"Take in evening. Counsel on neuropsychiatric side effects. Not for acute attacks.",
-      contraindications:"Hypersensitivity; caution with neuropsychiatric history" },
-    { name:"Sertraline", brand:"Zoloft", class:"Antidepressant – SSRI", category:"Psych", icon:"🧠",
-      indications:"Depression, OCD, panic disorder, PTSD, social anxiety, PMDD",route:"PO",
-      dosage:"50–200mg once daily (start 25–50mg, titrate q1–2wk)",
-      sideEffects:["Nausea","Sexual dysfunction","Insomnia","Diarrhea","Weight changes","Increased suicidal ideation (young adults)"],
-      nursing:"4–6 weeks for full effect. Monitor mood and suicidality especially early treatment. Do not stop abruptly (taper). Avoid MAOIs.",
-      contraindications:"MAOIs within 14 days, pimozide, linezolid" },
-    { name:"Fluoxetine", brand:"Prozac, Sarafem", class:"Antidepressant – SSRI", category:"Psych", icon:"🧠",
-      indications:"Depression, OCD, bulimia, panic disorder, PMDD",route:"PO",
-      dosage:"10–80mg once daily (start 20mg; can give weekly 90mg formulation for maintenance)",
-      sideEffects:["Insomnia","Anxiety","Sexual dysfunction","Headache","Weight changes"],
-      nursing:"Longest half-life of SSRIs — less discontinuation syndrome. Weekly dosing option for compliance. Monitor suicidality in youth.",
-      contraindications:"MAOIs within 14 days (5 weeks if transitioning FROM fluoxetine), thioridazine, pimozide" },
-    { name:"Lorazepam", brand:"Ativan", class:"Benzodiazepine (Schedule IV)", category:"Psych", icon:"🧠",
-      indications:"Anxiety, seizure (status epilepticus), alcohol withdrawal, procedure sedation",route:"PO, IV, IM",
-      dosage:"Anxiety: 0.5–2mg q6-8h. Status epilepticus: 0.05–0.1mg/kg IV (max 4mg).",
-      sideEffects:["CNS depression/sedation","Respiratory depression","Amnesia","Dependence/withdrawal"],
-      nursing:"High fall risk — bed in low position, call light in reach. Respiratory precautions. Do not stop abruptly (withdrawal seizure risk). Antidote: flumazenil.",
-      contraindications:"Acute narrow-angle glaucoma, severe respiratory depression, sleep apnea", antidote:"Flumazenil (Romazicon)" },
-    { name:"Haloperidol", brand:"Haldol", class:"Antipsychotic – Typical (Butyrophenone)", category:"Psych", icon:"🧠",
-      indications:"Schizophrenia, acute psychosis, agitation, Tourette syndrome, delirium (ICU)",route:"PO, IM, IV (IV for ICU only)",
-      dosage:"Oral: 0.5–20mg/day. IM (acute): 5mg q1h PRN. IV in ICU agitation: 0.5–10mg.",
-      sideEffects:["EPS (dystonia, akathisia, pseudoparkinsonism)","Tardive dyskinesia","QT prolongation","Neuroleptic Malignant Syndrome (NMS)","Sedation"],
-      nursing:"Monitor for EPS (abnormal movements). NMS is life-threatening — stop immediately if suspected. ECG monitoring with IV use. Restrain-reduction alternative for agitation.",
-      contraindications:"Parkinson disease, CNS depression, QT prolongation" },
-    { name:"Quetiapine", brand:"Seroquel", class:"Antipsychotic – Atypical", category:"Psych", icon:"🧠",
-      indications:"Schizophrenia, bipolar disorder, MDD (adjunct), insomnia (off-label low dose)",route:"PO",
-      dosage:"Psychosis: 150–750mg/day divided. Bipolar depression: 50–300mg/day.",
-      sideEffects:["Sedation","Weight gain","Metabolic syndrome","Orthostatic hypotension","QT prolongation","EPS (less than typical)"],
-      nursing:"Monitor weight, glucose, lipids. High fall risk due to sedation/orthostasis. Take with food. Taper when discontinuing.",
-      contraindications:"Dementia-related psychosis (boxed warning – increased mortality)" },
-    { name:"Lithium", brand:"Lithobid, Eskalith", class:"Mood Stabilizer", category:"Psych", icon:"🧠",
-      indications:"Bipolar disorder (acute mania and maintenance)",route:"PO",
-      dosage:"Start 300mg TID; adjust by levels. Therapeutic: 0.6–1.2 mEq/L (maintenance); 0.8–1.2 (acute).",
-      sideEffects:["Tremor","Polyuria/polydipsia","Weight gain","GI upset","Hypothyroidism","Nephrogenic DI","Toxicity (narrow index)"],
-      nursing:"Narrow therapeutic index. Monitor serum levels. Maintain adequate Na+ and fluid intake. Signs of toxicity: coarse tremor, confusion, ataxia, seizures.",
-      contraindications:"Renal failure, severe dehydration, low-sodium diet, pregnancy (Ebstein's anomaly risk)" },
-    { name:"Omeprazole", brand:"Prilosec", class:"Proton Pump Inhibitor (PPI)", category:"GI", icon:"🫃",
-      indications:"GERD, peptic ulcer, Zollinger-Ellison, H. pylori (combo), NSAID-induced ulcer prevention",route:"PO, IV",
-      dosage:"20–40mg before first meal daily; H. pylori: 20mg BID x10-14d (with antibiotics)",
-      sideEffects:["Headache","Diarrhea","Magnesium deficiency (long-term)","C. diff (long-term)","Bone fractures (long-term high-dose)"],
-      nursing:"Take 30–60 min before first meal. Long-term use: monitor Mg2+, B12, bone density. Avoid prolonged use without indication.",
-      contraindications:"Hypersensitivity to PPIs" },
-    { name:"Ondansetron", brand:"Zofran", class:"Antiemetic – 5-HT3 Receptor Antagonist", category:"GI", icon:"🫃",
-      indications:"Chemotherapy-induced N&V, PONV, pregnancy hyperemesis, gastroenteritis",route:"PO, IV, IM",
-      dosage:"4–8mg q6-8h PO or IV; chemo: 8mg PO BID or 0.15mg/kg IV before chemo",
-      sideEffects:["Headache","Constipation","QT prolongation","Serotonin syndrome (with other serotonergics)"],
-      nursing:"Monitor ECG in at-risk patients. Give IV slowly. ODT (oral dissolving tab) do not swallow whole — let dissolve.",
-      contraindications:"Hypersensitivity, congenital long QT syndrome, apomorphine" },
-    { name:"Metoclopramide", brand:"Reglan", class:"Prokinetic / Antiemetic – Dopamine Antagonist", category:"GI", icon:"🫃",
-      indications:"GERD, gastroparesis, N&V, post-op ileus, hiccups",route:"PO, IV, IM",
-      dosage:"5–10mg TID-QID before meals and at bedtime",
-      sideEffects:["Tardive dyskinesia (risk with >12wks use)","EPS","Restlessness/akathisia","Drowsiness"],
-      nursing:"Limit to <12 weeks. Monitor for involuntary movements (tardive dyskinesia — may be irreversible). IV slowly.",
-      contraindications:"GI obstruction or perforation, Parkinson disease, pheochromocytoma" },
-    { name:"Loperamide", brand:"Imodium", class:"Antidiarrheal – Opioid Agonist (local)", category:"GI", icon:"🫃",
-      indications:"Acute/chronic diarrhea, high-output ileostomy",route:"PO",
-      dosage:"4mg initially then 2mg after each loose stool; max 16mg/day",
-      sideEffects:["Constipation","Abdominal cramping","Dizziness"],
-      nursing:"Not for diarrhea with fever or bloody stools (may worsen infectious colitis). Adequate hydration essential. Does not cross BBB at therapeutic doses.",
-      contraindications:"Acute dysentery, C. diff colitis, ulcerative colitis exacerbation" },
-    { name:"Polyethylene Glycol", brand:"MiraLAX, GoLYTELY (bowel prep)", class:"Osmotic Laxative", category:"GI", icon:"🫃",
-      indications:"Constipation, bowel prep for colonoscopy",route:"PO",
-      dosage:"Constipation: 17g in 8oz water once daily. GoLYTELY (prep): 4L over 3-4h.",
-      sideEffects:["Bloating","Nausea","Cramping","Electrolyte imbalance (high-volume prep)"],
-      nursing:"Adequate fluid intake essential. Monitor electrolytes for high-volume bowel prep use.",
-      contraindications:"Bowel obstruction, known hypersensitivity" },
-    { name:"Phenytoin", brand:"Dilantin", class:"Anticonvulsant – Hydantoin", category:"Neuro", icon:"🧠",
-      indications:"Tonic-clonic seizures, status epilepticus, trigeminal neuralgia (off-label)",route:"PO, IV",
-      dosage:"Loading: 15–20mg/kg IV at max 50mg/min; Maintenance: 300–400mg/day.",
-      sideEffects:["Gingival hyperplasia","Nystagmus","Ataxia","Sedation","Cardiac arrhythmia (rapid IV)","Purple glove syndrome","Teratogenic"],
-      nursing:"Infuse IV no faster than 50mg/min (cardiac monitoring). Must use NS only — D5W causes precipitation. Therapeutic level: 10–20 mcg/mL (free: 1–2). Dental hygiene education.",
-      contraindications:"Sinus bradycardia, heart block, pregnancy (teratogenic), porphyria" },
-    { name:"Levetiracetam", brand:"Keppra", class:"Anticonvulsant", category:"Neuro", icon:"🧠",
-      indications:"Partial onset seizures, myoclonic seizures, generalized tonic-clonic",route:"PO, IV",
-      dosage:"500–3000mg/day divided BID; may start at 500mg BID and titrate",
-      sideEffects:["Irritability/behavioral changes (Keppra rage)","Somnolence","Fatigue","Dizziness"],
-      nursing:"Monitor mood and behavior. Fewer drug interactions than phenytoin. Renal dose adjustment. No lab monitoring routinely needed.",
-      contraindications:"Hypersensitivity" },
-    { name:"Gabapentin", brand:"Neurontin", class:"Anticonvulsant / Neuropathic Pain Agent", category:"Neuro", icon:"🧠",
-      indications:"Partial seizures, neuropathic pain (PHN, diabetic neuropathy), fibromyalgia, restless legs",route:"PO",
-      dosage:"Seizures: 300–1200mg TID. Pain: 100–600mg TID.",
-      sideEffects:["Somnolence","Dizziness","Ataxia","Edema","Weight gain","Respiratory depression (with CNS depressants)"],
-      nursing:"Reduce dose in renal impairment. High fall risk. Abuse potential — monitor. Do not stop abruptly.",
-      contraindications:"Hypersensitivity; caution with opioids (additive respiratory depression)" },
-    { name:"Sumatriptan", brand:"Imitrex", class:"Antimigraine – Triptan (5-HT1B/1D Agonist)", category:"Neuro", icon:"🧠",
-      indications:"Acute migraine treatment, cluster headaches",route:"PO, SubQ, Nasal spray",
-      dosage:"PO: 25–100mg; SubQ: 6mg (fastest onset); Nasal: 5–20mg; repeat in 2h if needed.",
-      sideEffects:["Chest tightness/pressure","Tingling","Warm/flushing sensations","Dizziness","Serotonin syndrome (with serotonergics)"],
-      nursing:"For acute attack only — not preventive. Contraindicated in cardiovascular disease. Use early in migraine.",
-      contraindications:"CAD, uncontrolled HTN, hemiplegic migraine, MAOIs within 14 days" },
-    { name:"Donepezil", brand:"Aricept", class:"Cholinesterase Inhibitor", category:"Neuro", icon:"🧠",
-      indications:"Alzheimer disease (mild-moderate-severe), dementia",route:"PO",
-      dosage:"5mg once daily at bedtime; may increase to 10–23mg after 4–6 weeks",
-      sideEffects:["Nausea","Diarrhea","Insomnia","Bradycardia","Muscle cramps","GI bleeding"],
-      nursing:"Give at bedtime to minimize GI side effects. Monitor HR. Does not cure — slows progression. Caution with NSAIDs (increased GI bleed risk).",
-      contraindications:"Hypersensitivity to piperidine derivatives; caution with sick sinus syndrome" },
-    { name:"Levothyroxine", brand:"Synthroid, Levoxyl", class:"Thyroid Hormone Replacement", category:"Endocrine", icon:"🦋",
-      indications:"Hypothyroidism, thyroid cancer suppression",route:"PO, IV",
-      dosage:"1.6 mcg/kg/day PO; start low (25–50mcg) in elderly/cardiac patients. IV dose = 50% of PO.",
-      sideEffects:["Tachycardia","Palpitations","Tremor","Insomnia","Weight loss","Osteoporosis (long-term overdose)"],
-      nursing:"Take on empty stomach 30–60 min before breakfast. Do not take within 4h of calcium, iron, antacids. Monitor TSH (primary parameter). Consistent brand matters.",
-      contraindications:"Untreated adrenal insufficiency, acute MI (relative), thyrotoxicosis" },
-    { name:"Prednisone", brand:"Deltasone", class:"Corticosteroid (Oral)", category:"Steroid", icon:"💊",
-      indications:"Inflammation, autoimmune disorders, asthma exacerbation, adrenal insufficiency",route:"PO",
-      dosage:"5–60mg daily (widely variable by indication)",
-      sideEffects:["Hyperglycemia","Weight gain/cushingoid features","Mood changes","Immunosuppression","Osteoporosis","Hypokalemia","Adrenal suppression"],
-      nursing:"Give with food. Do NOT stop abruptly (adrenal crisis risk — taper gradually). Monitor glucose, BP, and for infection signs.",
-      contraindications:"Systemic fungal infections, live vaccines during therapy" },
-    { name:"Methylprednisolone", brand:"Solu-Medrol", class:"Corticosteroid (IV)", category:"Steroid", icon:"💊",
-      indications:"Acute asthma, COPD exacerbation, spinal cord injury (controversial), autoimmune flares",route:"IV, IM, PO",
-      dosage:"IV: 40–250mg q4-6h; pulse: 500–1000mg/day for severe conditions",
-      sideEffects:["Hyperglycemia","Insomnia","GI upset","Fluid retention","Immunosuppression"],
-      nursing:"Monitor glucose closely (often significant hyperglycemia). Monitor for GI bleeding. Avoid live vaccines.",
-      contraindications:"Systemic fungal infection, live vaccines" },
-    { name:"Dexamethasone", brand:"Decadron", class:"Corticosteroid (Long-acting)", category:"Steroid", icon:"💊",
-      indications:"Cerebral edema, N&V prophylaxis (chemo), adrenal insufficiency testing, croup, COVID-19 (O2-dependent)",route:"PO, IV, IM",
-      dosage:"Edema: 10mg IV then 4mg q6h. N&V: 4–8mg IV. Diagnostic suppression test: 1mg.",
-      sideEffects:["Hyperglycemia","Immunosuppression","GI irritation","Insomnia","Adrenal suppression"],
-      nursing:"No mineralocorticoid activity. Monitor glucose. Most potent anti-inflammatory of common corticosteroids.",
-      contraindications:"Systemic fungal infections, active untreated infections" },
-    { name:"Hydrocortisone", brand:"Solu-Cortef", class:"Corticosteroid (Has Mineralocorticoid Activity)", category:"Steroid", icon:"💊",
-      indications:"Adrenal crisis/insufficiency replacement, severe allergic reactions, shock, status asthmaticus",route:"IV, IM, PO, topical",
-      dosage:"Adrenal crisis: 100mg IV q8h. Stress dosing: 50mg q6–8h.",
-      sideEffects:["Fluid and sodium retention","Hyperglycemia","GI upset","Hypokalemia"],
-      nursing:"Has both glucocorticoid and mineralocorticoid effects. Monitor electrolytes and glucose. For adrenal crisis replacement.",
-      contraindications:"Systemic fungal infections" },
-    { name:"Naloxone", brand:"Narcan", class:"Opioid Antagonist", category:"Analgesic", icon:"🚨",
-      indications:"Opioid overdose reversal (respiratory depression), opioid-induced pruritus",route:"IV, IM, SubQ, Intranasal",
-      dosage:"Overdose: 0.4–2mg IV/IM q2-3min; Intranasal: 2–4mg per nostril. Repeat if no response.",
-      sideEffects:["Acute opioid withdrawal (N/V, tachycardia, hypertension)","Resedation (short duration)"],
-      nursing:"Very short-acting (30–90 min). May wear off before opioid — monitor closely, may need repeat doses or infusion. OPIOID ANTIDOTE.",
-      contraindications:"Hypersensitivity to naloxone", antidote:"N/A — it IS the antidote" },
-    { name:"Flumazenil", brand:"Romazicon", class:"Benzodiazepine Antagonist", category:"Psych", icon:"🚨",
-      indications:"Benzodiazepine overdose reversal, procedural sedation reversal",route:"IV",
-      dosage:"0.2mg IV over 15 sec; repeat 0.2mg q1min; max 1mg total.",
-      sideEffects:["Seizures (in benzo-dependent patients)","Resedation","Dizziness","Nausea"],
-      nursing:"Short-acting — resedation can occur. Do NOT use in patients who are benzo-dependent (precipitates severe withdrawal/seizures). BENZODIAZEPINE ANTIDOTE.",
-      contraindications:"Benzo-dependent patients, overdose of mixed drugs including TCAs", antidote:"N/A — it IS the antidote" },
-    { name:"Atropine", brand:"AtroPen", class:"Anticholinergic / Parasympatholytic", category:"Cardiac", icon:"❤️",
-      indications:"Symptomatic bradycardia, organophosphate poisoning (large doses), pre-anesthesia, reduce secretions",route:"IV, IM, ET",
-      dosage:"Bradycardia: 0.5mg IV q3-5min; max 3mg. Organophosphate: 2–4mg IV q5-10min until secretions dry.",
-      sideEffects:["Tachycardia","Dry mouth","Urinary retention","Constipation","Blurred vision","Confusion (elderly)"],
-      nursing:"SLUDGE = Organophosphate toxicity symptoms (Salivation, Lacrimation, Urination, Defecation, GI distress, Emesis). Antidote: atropine + pralidoxime. Min dose 0.5mg — less can paradoxically worsen bradycardia.",
-      contraindications:"Narrow-angle glaucoma, tachycardia, BPH, ileus, myasthenia gravis" },
-    { name:"Potassium Chloride", brand:"Klor-Con, K-Dur", class:"Electrolyte Supplement", category:"Cardiac", icon:"⚗️",
-      indications:"Hypokalemia, cardiac arrhythmia prevention, diuretic-induced K+ loss",route:"PO, IV",
-      dosage:"PO: 20–80mEq/day divided. IV: max 10–20mEq/hr via central line (never undiluted).",
-      sideEffects:["GI upset/nausea (PO)","Phlebitis (peripheral IV)","Cardiac arrest (if IV too rapid)"],
-      nursing:"NEVER give undiluted IV push — FATAL. Max IV rate 10mEq/hr peripheral, 20mEq/hr central. Monitor ECG during IV infusion. PO with food or water.",
-      contraindications:"Hyperkalemia, renal failure, ACE inhibitor/K-sparing diuretic combo (caution)" },
-    { name:"Magnesium Sulfate", brand:"MgSO4", class:"Electrolyte / Anticonvulsant / Tocolytic", category:"Cardiac", icon:"⚗️",
-      indications:"Eclampsia/preeclampsia (seizure prevention & treatment), hypomagnesemia, torsades de pointes, preterm labor (tocolytic)",route:"IV, IM",
-      dosage:"Eclampsia: 4–6g IV load over 20 min, then 1–2g/hr infusion. Hypomagnesemia: 1–2g IV over 1 hour.",
-      sideEffects:["Hypotension","Respiratory depression (toxicity)","Loss of DTRs (early toxicity sign)","Flushing","Cardiac arrest (overdose)"],
-      nursing:"Monitor: DTRs (first sign of toxicity = loss of reflexes), RR (hold if <12), BP, urine output. Have calcium gluconate (antidote) at bedside. Therapeutic level 4–7 mEq/L.",
-      contraindications:"Hypermagnesemia, heart block, renal failure", antidote:"Calcium gluconate" },
-    { name:"Adenosine", brand:"Adenocard", class:"Antiarrhythmic – Class Misc.", category:"Cardiac", icon:"⚡",
-      indications:"Acute SVT (paroxysmal supraventricular tachycardia)",route:"Rapid IV push",
-      dosage:"6mg rapid IV push; if no response in 1–2 min, 12mg; may repeat 12mg once.",
-      sideEffects:["Chest pain/pressure","Dyspnea","Brief asystole (normal!)","Flushing","Headache"],
-      nursing:"Give as FAST IV push followed immediately by 20mL NS flush. Warn patient of uncomfortable chest pressure. Extremely short half-life (~10 sec). Monitor ECG throughout.",
-      contraindications:"2nd/3rd degree AV block, sick sinus syndrome, WPW, theophylline use (reduces effect)" },
-    { name:"Amiodarone", brand:"Cordarone, Pacerone", class:"Antiarrhythmic – Class III", category:"Cardiac", icon:"⚡",
-      indications:"Ventricular fibrillation, pulseless VT (ACLS), persistent afib, SVT",route:"IV, PO",
-      dosage:"VF/pulseless VT (ACLS): 300mg IV push; maintenance: 150mg IV over 10 min then infusion. PO: 200–400mg/day.",
-      sideEffects:["Pulmonary toxicity","Thyroid dysfunction (hypo or hyper)","Hepatotoxicity","Photosensitivity (blue-gray skin)","Corneal deposits","Peripheral neuropathy"],
-      nursing:"Multiple organ toxicity profile. Monitor LFTs, TFTs, PFTs, vision, skin. Check for drug interactions (many — inhibits CYP enzymes). Use sunscreen.",
-      contraindications:"2nd/3rd degree heart block, sinus bradycardia, iodine allergy, pregnancy" },
-    { name:"Labetalol", brand:"Trandate, Normodyne", class:"Alpha/Beta Blocker", category:"Cardiac", icon:"❤️",
-      indications:"Hypertensive emergency, pregnancy-related HTN (safe in OB), HTN",route:"PO, IV",
-      dosage:"HTN emergency: 20mg IV bolus, may repeat 40–80mg q10min; max 300mg. Infusion: 0.5–2mg/min.",
-      sideEffects:["Hypotension","Bradycardia","Bronchospasm","Dizziness"],
-      nursing:"Monitor BP and HR continuously with IV. Patient must remain supine during and for 3h after IV (postural hypotension). Drug of choice in hypertensive emergency in pregnancy.",
-      contraindications:"Severe bradycardia, heart block, decompensated HF, bronchospasm/asthma" },
-    { name:"Nitroglycerine", brand:"Nitrostat, NitroBid, Nitro-Dur", class:"Vasodilator (Organic Nitrate)", category:"Cardiac", icon:"💔",
-      indications:"Angina pectoris, acute MI, HTN emergency, acute HF with pulmonary edema",route:"SL, IV, Topical, Transdermal",
-      dosage:"SL: 0.3–0.4mg q5min x3; IV: 5–200mcg/min; Patch: 0.2–0.8mg/hr",
-      sideEffects:["Hypotension","Headache","Dizziness","Reflex tachycardia","Tolerance (continuous use)"],
-      nursing:"SL: Patient should be sitting. Call MD if no relief after 3 doses. IV in glass bottle only (plastic absorbs it). Remove patch before defibrillation. Tolerance: nitrate-free period 10-12h/day.",
-      contraindications:"Hypotension (SBP <90), recent PDE-5 inhibitor (sildenafil/Viagra) use, increased ICP" },
-    { name:"Clopidogrel", brand:"Plavix", class:"Antiplatelet – P2Y12 Inhibitor", category:"Anticoagulant", icon:"🩸",
-      indications:"ACS, recent MI/stroke, PCI with stent (with aspirin), peripheral arterial disease",route:"PO",
-      dosage:"75mg once daily; ACS loading: 300–600mg",
-      sideEffects:["Bleeding","Bruising","GI upset","TTP (rare but serious)"],
-      nursing:"Dual antiplatelet with aspirin = higher bleeding risk. Hold 5–7 days before surgery. Omeprazole may reduce efficacy (CYP2C19 interaction).",
-      contraindications:"Active pathological bleeding, peptic ulcer; caution with PPIs" },
-    { name:"Propofol", brand:"Diprivan", class:"General Anesthetic / Sedative-Hypnotic", category:"Neuro", icon:"💉",
-      indications:"ICU sedation, procedural sedation, induction/maintenance of anesthesia",route:"IV only",
-      dosage:"ICU sedation: 5–50 mcg/kg/min infusion. Procedural: 100–200mg IV induction.",
-      sideEffects:["Hypotension","Pain on injection","Hypertriglyceridemia","Propofol Infusion Syndrome (rare, high dose >5mg/kg/hr)"],
-      nursing:"Contains soybean oil and egg lecithin — check allergies. Single-use vials — risk of contamination. Monitor triglycerides with prolonged use. Pain with injection can be reduced by pre-treating vein with lidocaine.",
-      contraindications:"Egg/soybean/sulfite allergy, allergy to propofol" },
-    { name:"Dextrose 50% (D50W)", brand:"D50", class:"Hypoglycemia Treatment / Carbohydrate", category:"Antidiabetic", icon:"🍭",
-      indications:"Severe hypoglycemia (glucose <70 with altered consciousness)",route:"IV push",
-      dosage:"25–50mL (12.5–25g dextrose) IV push; repeat if needed",
-      sideEffects:["Hyperglycemia (rebound)","Phlebitis (vesicant)","Fluid overload"],
-      nursing:"Vesicant — give IV through large vein or central line. Verify blood glucose before and after administration. Recheck glucose in 15 min. Identify and address underlying cause.",
-      contraindications:"Hyperglycemia, known allergy" },
-    { name:"Famotidine", brand:"Pepcid", class:"H2 Receptor Antagonist", category:"GI", icon:"🫃",
-      indications:"GERD, peptic ulcer, stress ulcer prophylaxis, Zollinger-Ellison",route:"PO, IV",
-      dosage:"20–40mg PO once or twice daily; IV: 20mg q12h",
-      sideEffects:["Headache","Dizziness","Constipation or diarrhea"],
-      nursing:"Less effective than PPIs but lower long-term side effect profile. Onset: 1h, duration: 10–12h. Reduce dose in renal impairment.",
-      contraindications:"Hypersensitivity to H2 blockers" },
-    { name:"Acetylcysteine (N-acetylcysteine)", brand:"Mucomyst, Acetadote", class:"Antidote / Mucolytic", category:"Analgesic", icon:"🚨",
-      indications:"Acetaminophen overdose antidote, contrast dye protection, mucolytic (nebulized)",route:"IV, PO",
-      dosage:"IV: 150mg/kg over 60 min (loading), then 50mg/kg over 4h, then 100mg/kg over 16h. PO: 140mg/kg loading then 70mg/kg q4h x17 doses.",
-      sideEffects:["Anaphylactoid reaction (IV)","Nausea/vomiting","Rash"],
-      nursing:"Most effective within 8 hours of acetaminophen ingestion. IV anaphylactoid reaction — slow infusion and treat symptomatically. PO has sulfurous odor — can give with juice.",
-      contraindications:"Hypersensitivity (relative)", antidote:"N/A — it IS the antidote for acetaminophen" },
-  ];
-
-  // Merge built-in + custom
-  function getAllMeds() {
-    return builtInMeds.concat(customMeds.map(m => Object.assign({}, m, { isCustom: true })));
-  }
-
-  function saveCustomMeds() {
-    localStorage.setItem(CUSTOM_MEDS_KEY, JSON.stringify(customMeds));
-    updateMedBadges();
-  }
-
-  function updateMedBadges() {
-    var total = getAllMeds().length;
-    document.getElementById('medCountBadge').innerText = total + ' Meds';
-    var badge = document.getElementById('customMedsBadge');
-    if (customMeds.length > 0) {
-      badge.style.display = 'inline';
-      badge.innerText = '+' + customMeds.length + ' custom';
-    } else {
-      badge.style.display = 'none';
-    }
-  }
-
-  // ── ADD MED FORM LOGIC ──
-  var addMedFormVisible = false;
-  document.getElementById('addMedToggleBtn').addEventListener('click', function() {
-    addMedFormVisible = !addMedFormVisible;
-    document.getElementById('addMedForm').classList.toggle('visible', addMedFormVisible);
-    this.innerText = addMedFormVisible ? '✕ Cancel' : '➕ Add Your Own Medication';
-  });
-  document.getElementById('cancelNewMedBtn').addEventListener('click', function() {
-    addMedFormVisible = false;
-    document.getElementById('addMedForm').classList.remove('visible');
-    document.getElementById('addMedToggleBtn').innerText = '➕ Add Your Own Medication';
-    clearAddMedForm();
-  });
-  document.getElementById('saveNewMedBtn').addEventListener('click', function() {
-    var name = document.getElementById('newMedName').value.trim();
-    var cls = document.getElementById('newMedClass').value.trim();
-    var cat = document.getElementById('newMedCategory').value;
-    if (!name || !cls) { alert('Drug name and drug class are required.'); return; }
-    var se = document.getElementById('newMedSideEffects').value.split(',').map(s=>s.trim()).filter(Boolean);
-    var newMed = {
-      name: name,
-      brand: document.getElementById('newMedBrand').value.trim() || '',
-      class: cls,
-      category: cat,
-      icon: '💊',
-      indications: document.getElementById('newMedIndications').value.trim() || 'N/A',
-      route: document.getElementById('newMedRoute').value.trim() || 'N/A',
-      dosage: document.getElementById('newMedDosage').value.trim() || 'N/A',
-      sideEffects: se.length ? se : ['See prescribing information'],
-      nursing: document.getElementById('newMedNursing').value.trim() || 'Follow standard nursing protocol.',
-      contraindications: document.getElementById('newMedContra').value.trim() || 'See prescribing information',
-      antidote: document.getElementById('newMedAntidote').value.trim() || ''
-    };
-    customMeds.push(newMed);
-    saveCustomMeds();
-    clearAddMedForm();
-    addMedFormVisible = false;
-    document.getElementById('addMedForm').classList.remove('visible');
-    document.getElementById('addMedToggleBtn').innerText = '➕ Add Your Own Medication';
-    selectedMed = null;
-    renderMedList();
-    alert('✓ Medication "' + name + '" saved!');
-  });
-
-  function clearAddMedForm() {
-    ['newMedName','newMedBrand','newMedClass','newMedIndications','newMedRoute','newMedDosage','newMedSideEffects','newMedNursing','newMedContra','newMedAntidote'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
-  }
-
-  // ── CONFETTI ──
-  const canvas = document.getElementById('confetti-canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  let pieces = [];
-  function Confetti(x,y){this.x=x;this.y=y;this.size=Math.random()*6+4;this.speedY=Math.random()*3+2;this.speedX=Math.random()*2-1;this.color=['#2563eb','#7c3aed','#dc2626','#16a34a','#d97706'][Math.floor(Math.random()*5)];this.rotation=Math.random()*360;this.rotSpeed=Math.random()*10-5;}
-  Confetti.prototype.update=function(){this.y+=this.speedY;this.x+=this.speedX;this.rotation+=this.rotSpeed;if(this.y>canvas.height){this.y=-10;this.x=Math.random()*canvas.width;}};
-  Confetti.prototype.draw=function(){ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.rotation*Math.PI/180);ctx.fillStyle=this.color;ctx.fillRect(-this.size/2,-this.size/2,this.size,this.size);ctx.restore();};
-  function animateConfetti(){ctx.clearRect(0,0,canvas.width,canvas.height);pieces.forEach(p=>{p.update();p.draw();});if(pieces.length>0)requestAnimationFrame(animateConfetti);}
-  function showConfetti(){pieces=[];for(var i=0;i<100;i++)pieces.push(new Confetti(Math.random()*canvas.width,Math.random()*canvas.height-canvas.height));animateConfetti();setTimeout(()=>{pieces=[];},5000);}
-
-  // ── TASKS ──
-  function saveTasks(){localStorage.setItem(TASKS_KEY,JSON.stringify(tasks));}
-  function addTask(){
-    var text=document.getElementById('taskInput').value.trim();
-    var subject=document.getElementById('taskSubject').value;
-    var priority=document.getElementById('taskPriority').value;
-    var date=document.getElementById('taskDate').value;
-    if(!text||!date){alert('Please enter task description and date');return;}
-    tasks.push({text,subject,priority,date,done:false,id:Date.now()});
-    saveTasks();render();renderCalendar();
-    document.getElementById('taskInput').value='';
-    document.getElementById('taskDate').valueAsDate=new Date();
-  }
-  function toggleTask(i){tasks[i].done=!tasks[i].done;saveTasks();render();if(tasks[i].done)showConfetti();}
-  function removeTask(i){if(confirm('Delete this task?')){tasks.splice(i,1);saveTasks();render();renderCalendar();}}
-  function filterTasks(f){currentFilter=f;document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));document.querySelector('.filter-tab[data-filter="'+f+'"]').classList.add('active');render();}
-  function getFilteredTasks(){
-    var now=new Date(),today=now.toISOString().split('T')[0];
-    var wk=new Date(now.getTime()+7*864e5).toISOString().split('T')[0];
-    if(currentFilter==='today')return tasks.filter(t=>t.date===today);
-    if(currentFilter==='week')return tasks.filter(t=>t.date>=today&&t.date<=wk);
-    return tasks;
-  }
-  function formatDate(ds){var p=ds.split('-');return new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString('en-US',{month:'short',day:'numeric'});}
-  function render(){
-    var ft=getFilteredTasks(),c=document.getElementById('taskList');
-    if(!ft.length){c.innerHTML='<div class="empty-state">No tasks yet</div>';updateStats();return;}
-    c.innerHTML=ft.map(task=>{var oi=tasks.indexOf(task);return '<div class="task-item '+(task.done?'done':'')+' priority-'+task.priority+'"><div class="task-checkbox '+(task.done?'checked':'')+'" data-action="toggle" data-index="'+oi+'">'+(task.done?'✓':'')+'</div><div class="task-content"><div class="task-text">'+task.text+'</div><div class="task-meta"><span>'+task.subject+'</span><span>'+task.priority.toUpperCase()+'</span><span>'+formatDate(task.date)+'</span></div></div><div class="task-actions"><button data-action="remove" data-index="'+oi+'">🗑️</button></div></div>';}).join('');
-    updateStats();
-  }
-  function updateStats(){
-    var now=new Date(),today=now.toISOString().split('T')[0];
-    var wk=new Date(now.getTime()+7*864e5).toISOString().split('T')[0];
-    document.getElementById('weekTaskCount').innerText=tasks.filter(t=>t.date>=today&&t.date<=wk).length;
-    document.getElementById('completedCount').innerText=tasks.filter(t=>t.date===today&&t.done).length;
-  }
-
-  // ── TIMER ──
-  function updateTimerDisplay(){var m=Math.floor(timerSeconds/60),s=timerSeconds%60;document.getElementById('timerDisplay').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
-  function startTimer(){if(timerInterval)return;timerInterval=setInterval(()=>{if(timerSeconds>0){timerSeconds--;updateTimerDisplay();}else{pauseTimer();alert('⏰ Timer finished! Great work!');showConfetti();}},1000);}
-  function pauseTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;}}
-  function setTimerPreset(min,btn){pauseTimer();timerPresetMinutes=min;timerSeconds=min*60;updateTimerDisplay();localStorage.setItem(TIMER_PRESET_KEY,min);document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-  function setCustomTimer(){var min=parseInt(document.getElementById('customMinutes').value);if(min&&min>0&&min<=180){pauseTimer();timerPresetMinutes=min;timerSeconds=min*60;updateTimerDisplay();localStorage.setItem(TIMER_PRESET_KEY,min);document.getElementById('customMinutes').value='';document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));}}
-  function resetTimer(){pauseTimer();timerSeconds=timerPresetMinutes*60;updateTimerDisplay();}
-
-  // ── CALCULATORS ──
-  function calculate(){var o=parseFloat(document.getElementById('ordered').value),a=parseFloat(document.getElementById('available').value),v=parseFloat(document.getElementById('volume').value);if(!o||!a||!v){document.getElementById('doseOutput').innerHTML='<div class="calc-result" style="background:rgba(220,38,38,0.1);color:var(--danger);">Please fill in all fields</div>';return;}document.getElementById('doseOutput').innerHTML='<div class="calc-result">💉 Administer '+((o/a)*v).toFixed(2)+' mL</div>';}
-  function calculateIV(){var vol=parseFloat(document.getElementById('ivVolume').value),time=parseFloat(document.getElementById('ivTime').value),df=parseFloat(document.getElementById('dropFactor').value);if(!vol||!time||!df){document.getElementById('ivOutput').innerHTML='<div class="calc-result" style="background:rgba(220,38,38,0.1);color:var(--danger);">Please fill in all fields</div>';return;}document.getElementById('ivOutput').innerHTML='<div class="calc-result">💧 Flow Rate: '+(vol/time).toFixed(1)+' mL/hr<br>'+((vol*df)/(time*60)).toFixed(0)+' gtts/min</div>';}
-
-  // ── MED SEARCH ──
-  function highlight(str, query) {
-    if (!query) return str;
-    var escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    return str.replace(new RegExp('(' + escaped + ')', 'gi'), '<mark>$1</mark>');
-  }
-  function fuzzyScore(text, query) {
-    text=text.toLowerCase();query=query.toLowerCase();
-    if(text.includes(query))return 100;
-    var words=text.split(/[\s,\-\/()]+/);
-    for(var i=0;i<words.length;i++){if(words[i].startsWith(query))return 80;}
-    var qi=0,score=0;
-    for(var ti=0;ti<text.length&&qi<query.length;ti++){if(text[ti]===query[qi]){score++;qi++;}}
-    if(qi<query.length)return 0;
-    return Math.round((score/query.length)*40);
-  }
-  function getMedMatchScore(med, query) {
-    if(!query)return 1;
-    var scores=[fuzzyScore(med.name,query)*2,fuzzyScore(med.brand||'',query)*1.8,fuzzyScore(med.class,query)*1.2,fuzzyScore(med.category,query),fuzzyScore(med.indications,query)*0.5];
-    return Math.max.apply(null,scores);
-  }
-  function getFilteredMeds() {
-    var q=medSearchQuery.toLowerCase().trim();
-    var filtered=getAllMeds();
-    if(medActiveCat!=='all'){filtered=filtered.filter(m=>m.category===medActiveCat);}
-    if(q){filtered=filtered.map(m=>({med:m,score:getMedMatchScore(m,q)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).map(x=>x.med);}
-    return filtered;
-  }
-  function renderMedList() {
-    var r=document.getElementById('medResults');
-    var q=medSearchQuery;
-    if(selectedMed){renderMedDetail(selectedMed,q);return;}
-    var clearBtn=document.getElementById('medClearBtn');
-    clearBtn.style.display=q?'flex':'none';
-    if(!q&&medActiveCat==='all'){r.innerHTML='<div class="med-search-hint"><span class="hint-icon">💊</span>Search by drug name, brand name, or category — or tap a category above to browse</div>';return;}
-    var filtered=getFilteredMeds();
-    if(!filtered.length){r.innerHTML='<div class="med-no-results"><span class="med-no-results-icon">🔍</span><p>No medications found for "<strong>'+q+'</strong>"</p><p style="margin-top:6px;font-size:12px;">Try searching by generic name, brand name, or drug class</p></div>';return;}
-    var allMeds=getAllMeds();
-    r.innerHTML='<div style="font-size:12px;color:var(--muted);margin-bottom:10px;">'+filtered.length+' medication'+(filtered.length!==1?'s':'')+' found'+(q?' for "'+q+'"':'')+' </div>'+
-      filtered.map(function(m){
-        var idx=allMeds.indexOf(m);
-        var customTag=m.isCustom?'<span style="background:rgba(22,163,74,0.15);color:var(--success);border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px;">CUSTOM</span>':'';
-        return '<div class="med-item" data-idx="'+idx+'">'+'<div class="med-item-icon">'+m.icon+'</div>'+'<div class="med-item-body">'+'<div class="med-name">'+highlight(m.name,q)+customTag+'</div>'+(m.brand?'<div class="med-generic">'+highlight(m.brand,q)+'</div>':'')+'<div class="med-class"><span class="med-class-tag">'+m.category+'</span> '+highlight(m.class,q)+'</div>'+'</div>'+'<div class="med-arrow">›</div>'+'</div>';
-      }).join('');
-  }
-  function renderMedDetail(med, q) {
-    var r=document.getElementById('medResults');
-    var deleteBtn=med.isCustom?'<button id="deleteCustomMedBtn" style="background:rgba(220,38,38,0.1);color:var(--danger);border-color:rgba(220,38,38,0.3);font-size:13px;padding:8px 14px;min-height:36px;margin-left:auto;">🗑️ Delete</button>':'';
-    r.innerHTML=
-      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">'+
-        '<button class="med-back-btn" id="medBackBtn" style="margin:0;">← Back</button>'+
-        deleteBtn+
-      '</div>'+
-      '<div class="med-detail-view">'+
-        '<div class="med-detail-header">'+
-          '<div class="med-detail-name">'+med.icon+' '+med.name+(med.isCustom?' <span style="background:rgba(255,255,255,0.25);border-radius:4px;padding:2px 8px;font-size:12px;">CUSTOM</span>':'')+'</div>'+
-          (med.brand?'<div class="med-detail-generic">Brand: '+med.brand+'</div>':'')+
-          '<span class="med-detail-class">'+med.class+'</span>'+
-        '</div>'+
-        '<div class="med-detail-section"><h4>🎯 Indications</h4><p>'+med.indications+'</p></div>'+
-        '<div class="med-detail-section"><h4>📏 Dosage & Route</h4><div class="med-tags" style="margin-bottom:8px;">'+(med.route||'').split(',').map(r2=>'<span class="med-tag-blue">'+r2.trim()+'</span>').join('')+'</div><p>'+med.dosage+'</p></div>'+
-        '<div class="med-detail-section"><h4>⚠️ Side Effects</h4><div class="med-tags">'+med.sideEffects.map(s=>'<span class="med-tag-yellow">'+s+'</span>').join('')+'</div></div>'+
-        '<div class="med-detail-section"><h4>🩺 Nursing Considerations</h4><div class="med-nursing-box"><p>'+med.nursing+'</p></div></div>'+
-        '<div class="med-detail-section"><h4>🚫 Contraindications</h4><div class="med-tags">'+med.contraindications.split(',').map(c=>'<span class="med-tag-red">'+c.trim()+'</span>').join('')+'</div></div>'+
-        (med.antidote?'<div class="med-detail-section"><h4>💊 Antidote</h4><p style="color:var(--success);font-weight:600;">'+med.antidote+'</p></div>':'')+
-      '</div>';
-    document.getElementById('medBackBtn').addEventListener('click',function(){selectedMed=null;renderMedList();});
-    if(med.isCustom){
-      document.getElementById('deleteCustomMedBtn').addEventListener('click',function(){
-        if(confirm('Delete "'+med.name+'" from your custom medications?')){
-          var idx=customMeds.findIndex(m=>m.name===med.name&&m.isCustom);
-          if(idx===-1)idx=customMeds.findIndex(m=>m.name===med.name);
-          if(idx>-1){customMeds.splice(idx,1);saveCustomMeds();}
-          selectedMed=null;renderMedList();
-        }
-      });
-    }
-  }
-
-  // ── PHOTOS ──
-  function savePhotos(){localStorage.setItem(PHOTOS_KEY,JSON.stringify(notePhotos));}
-  function renderPhotos(){document.getElementById('photoPreviewContainer').innerHTML=notePhotos.map((p,i)=>'<div class="photo-preview"><img src="'+p+'" alt="Note photo"><button class="photo-delete" onclick="deletePhoto('+i+')">×</button></div>').join('');}
-  window.deletePhoto=i=>{if(confirm('Delete this photo?')){notePhotos.splice(i,1);savePhotos();renderPhotos();}};
-
-  // ── NOTES ──
-  function saveNotes(){localStorage.setItem(NOTES_KEY,document.getElementById('quickNotes').value);savePhotos();alert('✓ Notes saved!');}
-  function loadNotes(){document.getElementById('quickNotes').value=localStorage.getItem(NOTES_KEY)||'';}
-
-  // ── CHECKLIST ──
-  function saveChecklist(){var states=Array.from(document.querySelectorAll('.checklist input[type="checkbox"]')).map(cb=>cb.checked);localStorage.setItem(CHECKLIST_KEY,JSON.stringify(states));}
-  function loadChecklist(){var saved=localStorage.getItem(CHECKLIST_KEY);if(saved){var s=JSON.parse(saved);document.querySelectorAll('.checklist input[type="checkbox"]').forEach((cb,i)=>cb.checked=s[i]||false);}}
-  function resetChecklist(){document.querySelectorAll('.checklist input[type="checkbox"]').forEach(cb=>cb.checked=false);saveChecklist();}
-
-  // ── THEME ──
-  function toggleTheme(){document.body.classList.toggle('dark');var dark=document.body.classList.contains('dark');localStorage.setItem('theme',dark?'dark':'light');document.getElementById('themeBtn').innerText=dark?'☀️':'🌙';}
-  function loadTheme(){if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark');document.getElementById('themeBtn').innerText='☀️';}}
-
-  // ── TABS ──
-  function switchTab(name){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));document.querySelector('.tab[data-tab="'+name+'"]').classList.add('active');document.getElementById(name+'Tab').classList.add('active');}
-
-  // ── CALENDAR ──
-  function renderCalendar(){
-    var yr=currentDate.getFullYear(),mo=currentDate.getMonth();
-    var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-    document.getElementById('calendarMonth').innerText=months[mo]+' '+yr;
-    var firstDay=new Date(yr,mo,1).getDay();
-    var daysInMonth=new Date(yr,mo+1,0).getDate();
-    var prevDays=new Date(yr,mo,0).getDate();
-    var cal=document.getElementById('calendar');
-    cal.innerHTML='';cal.className='calendar-grid';
-    ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{var h=document.createElement('div');h.className='calendar-day-header';h.innerText=d;cal.appendChild(h);});
-    var todayStr=new Date().toISOString().split('T')[0];
-    for(var i=firstDay-1;i>=0;i--){var d=document.createElement('div');d.className='calendar-day other-month';d.innerHTML='<div class="calendar-day-number">'+(prevDays-i)+'</div>';cal.appendChild(d);}
-    for(var day=1;day<=daysInMonth;day++){
-      var el=document.createElement('div');el.className='calendar-day';
-      var ds=yr+'-'+String(mo+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
-      if(ds===todayStr)el.classList.add('today');
-      if(tasks.some(t=>t.date===ds))el.classList.add('has-tasks');
-      if(selectedDate===ds)el.classList.add('selected');
-      el.innerHTML='<div class="calendar-day-number">'+day+'</div>';
-      el.dataset.date=ds;cal.appendChild(el);
-    }
-    var total=cal.children.length-7;
-    for(var r=1;r<=42-total-7;r++){var re=document.createElement('div');re.className='calendar-day other-month';re.innerHTML='<div class="calendar-day-number">'+r+'</div>';cal.appendChild(re);}
-  }
-  function selectDate(ds){selectedDate=ds;renderCalendar();showDayEvents(ds);}
-  function showDayEvents(ds){
-    var c=document.getElementById('dayEvents');
-    var dt=tasks.filter(t=>t.date===ds);
-    if(!dt.length){c.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;">No tasks for '+formatDate(ds)+'</div>';return;}
-    var p=ds.split('-'),date=new Date(+p[0],+p[1]-1,+p[2]);
-    c.innerHTML='<h3 style="margin-bottom:12px;font-size:16px;">Tasks for '+date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+'</h3>';
-    dt.forEach(task=>{var div=document.createElement('div');div.className='event-item priority-'+task.priority;div.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-weight:600;margin-bottom:4px;">'+task.text+'</div><div style="font-size:12px;color:var(--muted);">'+task.subject+' · '+task.priority.toUpperCase()+'</div></div>'+(task.done?'<span style="color:var(--success);font-size:20px;">✓</span>':'')+'</div>';c.appendChild(div);});
-  }
-
-  // ── EVENT LISTENERS ──
-  document.getElementById('themeBtn').addEventListener('click',toggleTheme);
-  document.getElementById('addTaskBtn').addEventListener('click',addTask);
-  document.getElementById('startTimerBtn').addEventListener('click',startTimer);
-  document.getElementById('pauseTimerBtn').addEventListener('click',pauseTimer);
-  document.getElementById('resetTimerBtn').addEventListener('click',resetTimer);
-  document.getElementById('setCustomTimerBtn').addEventListener('click',setCustomTimer);
-  document.getElementById('calculateBtn').addEventListener('click',calculate);
-  document.getElementById('calculateIVBtn').addEventListener('click',calculateIV);
-  document.getElementById('saveNotesBtn').addEventListener('click',saveNotes);
-  document.getElementById('resetChecklistBtn').addEventListener('click',resetChecklist);
-  document.getElementById('prevMonthBtn').addEventListener('click',()=>{currentDate.setMonth(currentDate.getMonth()-1);renderCalendar();if(selectedDate)showDayEvents(selectedDate);});
-  document.getElementById('nextMonthBtn').addEventListener('click',()=>{currentDate.setMonth(currentDate.getMonth()+1);renderCalendar();if(selectedDate)showDayEvents(selectedDate);});
-  document.getElementById('medSearch').addEventListener('input',function(){medSearchQuery=this.value;selectedMed=null;renderMedList();});
-  document.getElementById('medClearBtn').addEventListener('click',function(){document.getElementById('medSearch').value='';medSearchQuery='';selectedMed=null;renderMedList();});
-  document.getElementById('medCategoryFilters').addEventListener('click',function(e){var btn=e.target.closest('.med-cat-btn');if(!btn)return;medActiveCat=btn.dataset.cat;selectedMed=null;document.querySelectorAll('.med-cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMedList();});
-  document.getElementById('medResults').addEventListener('click',function(e){var item=e.target.closest('.med-item[data-idx]');if(item){var allMeds=getAllMeds();selectedMed=allMeds[parseInt(item.dataset.idx)];renderMedDetail(selectedMed,medSearchQuery);}});
-  document.getElementById('photoInput').addEventListener('change',function(e){Array.from(e.target.files).forEach(file=>{var r=new FileReader();r.onload=ev=>{notePhotos.push(ev.target.result);renderPhotos();};r.readAsDataURL(file);});e.target.value='';});
-  document.querySelectorAll('.filter-tab').forEach(tab=>tab.addEventListener('click',function(){filterTasks(this.dataset.filter);}));
-  document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',function(){switchTab(this.dataset.tab);}));
-  document.querySelectorAll('.preset-btn').forEach(btn=>btn.addEventListener('click',function(){setTimerPreset(parseInt(this.dataset.minutes),this);}));
-  document.getElementById('taskList').addEventListener('click',function(e){var btn=e.target.closest('[data-action]');if(btn){var a=btn.dataset.action,i=parseInt(btn.dataset.index);if(a==='toggle')toggleTask(i);else if(a==='remove')removeTask(i);}});
-  document.getElementById('calendar').addEventListener('click',function(e){var d=e.target.closest('.calendar-day');if(d&&d.dataset.date&&!d.classList.contains('other-month'))selectDate(d.dataset.date);});
-  document.getElementById('checklist').addEventListener('change',saveChecklist);
-  window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
-
-  // ── INIT ──
-  loadTheme();loadNotes();renderPhotos();loadChecklist();
-  render();renderCalendar();updateTimerDisplay();renderMedList();
-  updateGraduationCountdown();updateMedBadges();
-  setInterval(updateGraduationCountdown,60000);
-
-  var sp=localStorage.getItem(TIMER_PRESET_KEY);
-  if(sp){timerPresetMinutes=parseInt(sp);timerSeconds=timerPresetMinutes*60;updateTimerDisplay();document.querySelectorAll('.preset-btn').forEach(b=>{if(parseInt(b.dataset.minutes)===timerPresetMinutes)b.classList.add('active');});}
-  document.getElementById('taskDate').valueAsDate=new Date();
+</div><script>
+(function(){'use strict';
+const TASKS_KEY='nursingTasks',NOTES_KEY='nursingNotes',PHOTOS_KEY='nursingPhotos',CHECKLIST_KEY='nursingChecklist',TIMER_PRESET_KEY='timerPreset',CUSTOM_MEDS_KEY='nursingCustomMeds';
+let tasks=JSON.parse(localStorage.getItem(TASKS_KEY))||[],notePhotos=JSON.parse(localStorage.getItem(PHOTOS_KEY))||[],customMeds=JSON.parse(localStorage.getItem(CUSTOM_MEDS_KEY))||[],currentFilter='all',timerSeconds=25*60,timerInterval=null,timerPresetMinutes=25,currentDate=new Date(),selectedDate=null,selectedMed=null,medActiveCat='all',medSearchQuery='';
+function updateGraduationCountdown(){var now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate()),grad=new Date(2026,11,5),diff=Math.round((grad-today)/(1000*60*60*24)),el=document.getElementById('graduationCountdown');if(diff>0)el.innerText=diff+(diff===1?' Day':' Days');else if(diff===0){el.innerText='🎉 Today is the Day!';showConfetti();}else el.innerText='🎓 Congratulations, RN!';}
+const builtInMeds=[
+{name:"Acetaminophen",brand:"Tylenol",class:"Analgesic, Antipyretic",category:"Analgesic",icon:"🌡️",indications:"Mild-moderate pain, fever reduction",route:"PO, PR, IV",dosage:"325–650mg q4-6h PO; max 4000mg/day. IV: 650–1000mg q6-8h.",sideEffects:["Nausea (rare)","Rash","Hepatotoxicity (overdose)"],nursing:"Monitor LFTs with chronic use. Do not exceed max dose. Check all combo products for hidden APAP.",contraindications:"Severe hepatic impairment, alcohol use disorder",antidote:"N-acetylcysteine (NAC)"},
+{name:"Ibuprofen",brand:"Advil, Motrin",class:"NSAID",category:"Analgesic",icon:"💊",indications:"Pain, fever, inflammation, dysmenorrhea",route:"PO",dosage:"200–800mg q6-8h with food; max 3200mg/day",sideEffects:["GI upset/ulceration","Renal impairment","Hypertension","Increased bleeding risk"],nursing:"Give with food or milk. Monitor renal function and BP.",contraindications:"Active GI bleed, renal failure, 3rd trimester pregnancy, CABG perioperative"},
+{name:"Morphine",brand:"MS Contin, Roxanol",class:"Opioid Analgesic (Schedule II)",category:"Analgesic",icon:"💉",indications:"Moderate–severe pain, acute MI, pulmonary edema",route:"IV, IM, SubQ, PO",dosage:"IV: 2–4mg q3-4h PRN; PO: 10–30mg q4h (IR); ER: 15–30mg q8-12h",sideEffects:["Respiratory depression","Constipation","Sedation","Nausea","Miosis","Urinary retention"],nursing:"Hold if RR <12. Have naloxone available. Monitor O2 sat. Implement bowel regimen.",contraindications:"Respiratory depression, paralytic ileus, acute asthma",antidote:"Naloxone (Narcan)"},
+{name:"Oxycodone",brand:"OxyContin, Percocet",class:"Opioid Analgesic (Schedule II)",category:"Analgesic",icon:"💉",indications:"Moderate-severe pain",route:"PO",dosage:"IR: 5–15mg q4-6h PRN; ER: 10–40mg q12h",sideEffects:["Respiratory depression","Constipation","Sedation","Dizziness"],nursing:"Monitor RR, pain level. Never crush ER form. Bowel regimen needed.",contraindications:"Respiratory depression, GI obstruction",antidote:"Naloxone (Narcan)"},
+{name:"Hydromorphone",brand:"Dilaudid",class:"Opioid Analgesic (Schedule II)",category:"Analgesic",icon:"💉",indications:"Moderate-severe pain; 5–10x more potent than morphine",route:"IV, IM, PO",dosage:"IV: 0.2–0.6mg q2-3h; PO: 2–4mg q4-6h",sideEffects:["Respiratory depression","Sedation","Hypotension","Constipation"],nursing:"High-alert medication. Very potent — verify dose carefully. Have naloxone ready.",contraindications:"Respiratory depression, acute asthma",antidote:"Naloxone (Narcan)"},
+{name:"Tramadol",brand:"Ultram",class:"Opioid-like Analgesic (Schedule IV)",category:"Analgesic",icon:"💊",indications:"Moderate pain",route:"PO",dosage:"50–100mg q4-6h; max 400mg/day",sideEffects:["Dizziness","Constipation","Nausea","Seizure risk","Serotonin syndrome"],nursing:"Caution with seizure history. Avoid with SSRIs.",contraindications:"Seizure disorder, MAOIs, severe hepatic/renal impairment"},
+{name:"Naloxone",brand:"Narcan",class:"Opioid Antagonist",category:"Analgesic",icon:"🚨",indications:"Opioid overdose reversal",route:"IV, IM, SubQ, Intranasal",dosage:"0.4–2mg IV/IM q2-3min; Intranasal: 2–4mg per nostril",sideEffects:["Acute opioid withdrawal","Resedation"],nursing:"Very short-acting (30–90 min). May need repeat doses or infusion. OPIOID ANTIDOTE.",contraindications:"Hypersensitivity to naloxone",antidote:"N/A — it IS the antidote"},
+{name:"Acetylcysteine (NAC)",brand:"Mucomyst, Acetadote",class:"Antidote / Mucolytic",category:"Analgesic",icon:"🚨",indications:"Acetaminophen overdose antidote, contrast dye protection, mucolytic",route:"IV, PO",dosage:"IV: 150mg/kg over 60 min loading, then 50mg/kg over 4h, then 100mg/kg over 16h.",sideEffects:["Anaphylactoid reaction (IV)","Nausea/vomiting","Rash"],nursing:"Most effective within 8 hours of APAP ingestion. IV anaphylactoid reaction — slow infusion.",contraindications:"Hypersensitivity (relative)",antidote:"N/A — it IS the antidote"},
+{name:"Amoxicillin",brand:"Amoxil",class:"Antibiotic – Penicillin",category:"Antibiotic",icon:"🦠",indications:"Ear, sinus, throat, UTI, H. pylori (combo)",route:"PO",dosage:"250–500mg q8h or 875mg q12h",sideEffects:["Diarrhea","Nausea","Rash","Allergic reactions"],nursing:"Ask about penicillin allergy. Complete full course. Monitor for C. diff.",contraindications:"Penicillin/amoxicillin allergy"},
+{name:"Cephalexin",brand:"Keflex",class:"Antibiotic – Cephalosporin (1st gen)",category:"Antibiotic",icon:"🦠",indications:"Skin infections, UTI, strep throat, bone infections",route:"PO",dosage:"250–500mg q6h; max 4g/day",sideEffects:["GI upset","Rash","Diarrhea"],nursing:"Caution with PCN allergy. Complete full course.",contraindications:"Cephalosporin allergy"},
+{name:"Azithromycin",brand:"Zithromax, Z-Pack",class:"Antibiotic – Macrolide",category:"Antibiotic",icon:"🦠",indications:"Community pneumonia, STIs, atypical bacteria",route:"PO, IV",dosage:"500mg day 1 then 250mg days 2–5",sideEffects:["GI upset","QT prolongation","Hearing loss (high dose)"],nursing:"Monitor ECG in at-risk patients. Take on empty stomach.",contraindications:"QT prolongation, liver disease, macrolide allergy"},
+{name:"Ciprofloxacin",brand:"Cipro",class:"Antibiotic – Fluoroquinolone",category:"Antibiotic",icon:"🦠",indications:"UTI, respiratory, GI infections, anthrax prophylaxis",route:"PO, IV",dosage:"250–750mg q12h PO; 200–400mg q8-12h IV",sideEffects:["Tendon rupture","QT prolongation","Photosensitivity","C. diff"],nursing:"Avoid in <18 years, pregnant. No dairy within 2h.",contraindications:"Age <18 (relative), pregnancy, tendon disorders, QT prolongation"},
+{name:"Metronidazole",brand:"Flagyl",class:"Antibiotic – Nitroimidazole",category:"Antibiotic",icon:"🦠",indications:"Anaerobic infections, C. diff, BV, H. pylori (combo)",route:"PO, IV",dosage:"250–500mg q6-8h PO; 500mg q6-8h IV",sideEffects:["Metallic taste","Nausea","Disulfiram-like reaction with alcohol"],nursing:"Avoid alcohol during and 48h after treatment.",contraindications:"First trimester pregnancy, alcohol use during treatment"},
+{name:"Clindamycin",brand:"Cleocin",class:"Antibiotic – Lincosamide",category:"Antibiotic",icon:"🦠",indications:"Serious anaerobic/staphylococcal infections, skin infections",route:"PO, IV, topical",dosage:"150–450mg q6h PO; 600–900mg q8h IV",sideEffects:["Diarrhea","C. diff (high risk)","GI upset","Rash"],nursing:"Highest risk antibiotic for C. diff. Monitor diarrhea. Infuse IV over ≥30 min.",contraindications:"History of C. diff or pseudomembranous colitis"},
+{name:"Vancomycin",brand:"Vancocin",class:"Antibiotic – Glycopeptide",category:"Antibiotic",icon:"🦠",indications:"MRSA, C. diff (PO only), serious Gram+ infections",route:"IV, PO (C. diff only)",dosage:"IV: 15–20mg/kg q8-12h; PO: 125–500mg q6h for C. diff",sideEffects:["Nephrotoxicity","Red Man Syndrome (rapid infusion)","Ototoxicity"],nursing:"Monitor trough/AUC levels, renal function, hearing. Infuse over ≥60 min.",contraindications:"Allergy to vancomycin"},
+{name:"Trimethoprim-Sulfamethoxazole",brand:"Bactrim, Septra",class:"Antibiotic – Sulfonamide",category:"Antibiotic",icon:"🦠",indications:"UTI, MRSA skin infections, PCP prophylaxis",route:"PO, IV",dosage:"1 DS tablet q12h for uncomplicated UTI x3–5 days",sideEffects:["Rash/photosensitivity","Hyperkalemia","Renal impairment","Stevens-Johnson (rare)"],nursing:"Sulfa allergy? Avoid. Encourage fluids. Monitor K+ and renal function.",contraindications:"Sulfa allergy, severe renal impairment, G6PD deficiency"},
+{name:"Lisinopril",brand:"Zestril, Prinivil",class:"ACE Inhibitor",category:"Cardiac",icon:"❤️",indications:"Hypertension, heart failure, post-MI renal protection",route:"PO",dosage:"HTN: 10mg daily initially; range 10–40mg/day. HF: 5–40mg/day.",sideEffects:["Dry cough","Dizziness/first-dose hypotension","Hyperkalemia","Angioedema"],nursing:"Monitor BP, K+, creatinine. Watch for angioedema (stop immediately). Avoid in pregnancy.",contraindications:"Pregnancy, angioedema history, bilateral renal artery stenosis"},
+{name:"Metoprolol",brand:"Lopressor / Toprol-XL",class:"Beta-1 Blocker (Cardioselective)",category:"Cardiac",icon:"❤️",indications:"HTN, angina, HF (succinate), post-MI, afib rate control",route:"PO, IV",dosage:"PO: 25–100mg q12h (tartrate) or 25–200mg daily (succinate). IV: 2.5–5mg q2min x3.",sideEffects:["Bradycardia","Hypotension","Fatigue","Bronchospasm (high dose)"],nursing:"Hold if HR <60 or SBP <90. Do not abruptly discontinue.",contraindications:"Severe bradycardia, heart block, decompensated HF, cardiogenic shock"},
+{name:"Carvedilol",brand:"Coreg",class:"Alpha/Beta Blocker",category:"Cardiac",icon:"❤️",indications:"Heart failure, HTN, post-MI LV dysfunction",route:"PO",dosage:"HF: start 3.125mg q12h; titrate to 25mg q12h",sideEffects:["Dizziness","Hypotension","Bradycardia","Weight gain"],nursing:"Take with food. Titrate slowly. Monitor BP and HR.",contraindications:"Severe bradycardia, cardiogenic shock, bronchial asthma, heart block"},
+{name:"Amlodipine",brand:"Norvasc",class:"Calcium Channel Blocker (Dihydropyridine)",category:"Cardiac",icon:"❤️",indications:"HTN, chronic stable angina",route:"PO",dosage:"2.5–10mg once daily",sideEffects:["Peripheral edema","Headache","Flushing","Reflex tachycardia"],nursing:"Monitor BP and peripheral edema.",contraindications:"Hypersensitivity, severe aortic stenosis"},
+{name:"Furosemide",brand:"Lasix",class:"Loop Diuretic",category:"Cardiac",icon:"💧",indications:"Edema (HF, renal, hepatic), HTN, hypercalcemia",route:"PO, IV, IM",dosage:"PO: 20–80mg/day; IV: 20–80mg (may repeat q6-8h); max 600mg/day",sideEffects:["Hypokalemia","Hyponatremia","Dehydration","Hypotension","Ototoxicity (rapid IV)"],nursing:"Monitor daily weights, I&O, electrolytes, BP. Give in morning. IV infuse no faster than 4mg/min.",contraindications:"Anuria, sulfa allergy (relative), electrolyte depletion"},
+{name:"Spironolactone",brand:"Aldactone",class:"Potassium-Sparing Diuretic",category:"Cardiac",icon:"💧",indications:"Heart failure, ascites, HTN, hyperaldosteronism",route:"PO",dosage:"25–50mg daily; HF: 12.5–25mg daily",sideEffects:["Hyperkalemia","Gynecomastia","Irregular periods"],nursing:"Monitor K+ levels closely. Avoid potassium supplements.",contraindications:"Hyperkalemia, renal failure, Addison's disease"},
+{name:"Digoxin",brand:"Lanoxin",class:"Cardiac Glycoside",category:"Cardiac",icon:"❤️",indications:"HF (with reduced EF), afib rate control",route:"PO, IV",dosage:"0.125–0.25mg daily; adjust for renal function. Therapeutic: 0.5–2 ng/mL.",sideEffects:["Arrhythmias","Nausea/vomiting","Visual changes (yellow-green halos)","Bradycardia"],nursing:"Monitor HR (hold if <60). Check serum dig level, K+. Narrow therapeutic index.",contraindications:"Ventricular fibrillation, hypersensitivity",antidote:"Digoxin immune Fab (Digibind/DigiFab)"},
+{name:"Atorvastatin",brand:"Lipitor",class:"Statin (HMG-CoA Reductase Inhibitor)",category:"Cardiac",icon:"❤️",indications:"Hyperlipidemia, CVD risk reduction",route:"PO",dosage:"10–80mg once daily",sideEffects:["Myopathy/rhabdomyolysis","Elevated LFTs","Headache"],nursing:"Monitor lipid panel and LFTs. Report muscle pain. Avoid grapefruit juice.",contraindications:"Active liver disease, pregnancy, breastfeeding"},
+{name:"Atropine",brand:"AtroPen",class:"Anticholinergic / Parasympatholytic",category:"Cardiac",icon:"❤️",indications:"Symptomatic bradycardia, organophosphate poisoning, pre-anesthesia",route:"IV, IM, ET",dosage:"Bradycardia: 0.5mg IV q3-5min; max 3mg.",sideEffects:["Tachycardia","Dry mouth","Urinary retention","Constipation","Blurred vision"],nursing:"SLUDGE = organophosphate toxicity symptoms. Min dose 0.5mg.",contraindications:"Narrow-angle glaucoma, tachycardia, BPH, myasthenia gravis"},
+{name:"Potassium Chloride",brand:"Klor-Con, K-Dur",class:"Electrolyte Supplement",category:"Cardiac",icon:"⚗️",indications:"Hypokalemia, cardiac arrhythmia prevention",route:"PO, IV",dosage:"PO: 20–80mEq/day divided. IV: max 10–20mEq/hr via central line.",sideEffects:["GI upset (PO)","Phlebitis (peripheral IV)","Cardiac arrest (rapid IV)"],nursing:"NEVER give undiluted IV push — FATAL. Monitor ECG during IV infusion.",contraindications:"Hyperkalemia, renal failure"},
+{name:"Magnesium Sulfate",brand:"MgSO4",class:"Electrolyte / Anticonvulsant / Tocolytic",category:"Cardiac",icon:"⚗️",indications:"Eclampsia/preeclampsia, hypomagnesemia, torsades de pointes",route:"IV, IM",dosage:"Eclampsia: 4–6g IV load over 20 min, then 1–2g/hr infusion.",sideEffects:["Hypotension","Respiratory depression (toxicity)","Loss of DTRs","Flushing"],nursing:"Monitor DTRs, RR, BP, urine output. Have calcium gluconate at bedside. Therapeutic: 4–7 mEq/L.",contraindications:"Hypermagnesemia, heart block, renal failure",antidote:"Calcium gluconate"},
+{name:"Adenosine",brand:"Adenocard",class:"Antiarrhythmic – Class Misc.",category:"Cardiac",icon:"⚡",indications:"Acute SVT",route:"Rapid IV push",dosage:"6mg rapid IV push; if no response, 12mg; may repeat 12mg once.",sideEffects:["Chest pain/pressure","Dyspnea","Brief asystole (normal!)","Flushing"],nursing:"Give as FAST IV push followed immediately by 20mL NS flush. Extremely short half-life (~10 sec).",contraindications:"2nd/3rd degree AV block, sick sinus syndrome, WPW"},
+{name:"Amiodarone",brand:"Cordarone, Pacerone",class:"Antiarrhythmic – Class III",category:"Cardiac",icon:"⚡",indications:"Ventricular fibrillation, pulseless VT (ACLS), persistent afib",route:"IV, PO",dosage:"VF/pulseless VT (ACLS): 300mg IV push. PO: 200–400mg/day.",sideEffects:["Pulmonary toxicity","Thyroid dysfunction","Hepatotoxicity","Photosensitivity (blue-gray skin)"],nursing:"Multiple organ toxicity. Monitor LFTs, TFTs, PFTs, vision, skin.",contraindications:"2nd/3rd degree heart block, sinus bradycardia, iodine allergy, pregnancy"},
+{name:"Labetalol",brand:"Trandate, Normodyne",class:"Alpha/Beta Blocker",category:"Cardiac",icon:"❤️",indications:"Hypertensive emergency, pregnancy-related HTN",route:"PO, IV",dosage:"HTN emergency: 20mg IV bolus, may repeat 40–80mg q10min; max 300mg.",sideEffects:["Hypotension","Bradycardia","Bronchospasm","Dizziness"],nursing:"Monitor BP and HR continuously. Drug of choice in hypertensive emergency in pregnancy.",contraindications:"Severe bradycardia, heart block, decompensated HF, bronchospasm/asthma"},
+{name:"Nitroglycerine",brand:"Nitrostat, NitroBid, Nitro-Dur",class:"Vasodilator (Organic Nitrate)",category:"Cardiac",icon:"💔",indications:"Angina, acute MI, HTN emergency, acute HF",route:"SL, IV, Topical, Transdermal",dosage:"SL: 0.3–0.4mg q5min x3; IV: 5–200mcg/min; Patch: 0.2–0.8mg/hr",sideEffects:["Hypotension","Headache","Dizziness","Reflex tachycardia"],nursing:"SL: Patient should be sitting. IV in glass bottle only. Remove patch before defibrillation.",contraindications:"Hypotension (SBP <90), recent PDE-5 inhibitor use, increased ICP"},
+{name:"Warfarin",brand:"Coumadin",class:"Anticoagulant (Vitamin K Antagonist)",category:"Anticoagulant",icon:"🩸",indications:"DVT/PE treatment/prevention, afib, mechanical heart valves",route:"PO",dosage:"Individualized by INR; target INR 2–3.",sideEffects:["Bleeding","Bruising","Hair loss"],nursing:"Monitor INR. Consistent Vitamin K diet. Many drug interactions.",contraindications:"Active bleeding, pregnancy, severe hypertension",antidote:"Vitamin K (phytonadione), FFP"},
+{name:"Heparin",brand:"Unfractionated Heparin",class:"Anticoagulant (Unfractionated)",category:"Anticoagulant",icon:"🩸",indications:"DVT/PE treatment, ACS, surgical prophylaxis",route:"IV, SubQ",dosage:"DVT/PE: weight-based IV protocol. Prophylaxis: 5000 units SubQ q8-12h.",sideEffects:["Bleeding","HIT (Heparin-Induced Thrombocytopenia)","Thrombosis (with HIT)"],nursing:"Monitor aPTT (60–100s). Never give IM. Monitor platelets (HIT risk days 5–10).",contraindications:"Active bleeding, HIT history, severe thrombocytopenia",antidote:"Protamine sulfate"},
+{name:"Enoxaparin",brand:"Lovenox",class:"Anticoagulant (LMWH)",category:"Anticoagulant",icon:"🩸",indications:"DVT/PE treatment, prophylaxis, ACS",route:"SubQ",dosage:"Treatment: 1mg/kg SubQ q12h. Prophylaxis: 30–40mg SubQ daily.",sideEffects:["Bleeding","Bruising at injection site","Thrombocytopenia"],nursing:"Administer in abdomen. Rotate sites. Renal dose adjustment needed.",contraindications:"Active bleeding, HIT, severe renal impairment (CrCl <30)",antidote:"Protamine sulfate (partial reversal)"},
+{name:"Aspirin",brand:"Bayer, Ecotrin",class:"Antiplatelet / NSAID",category:"Anticoagulant",icon:"🩸",indications:"Acute MI/stroke, antiplatelet (81mg), pain/fever",route:"PO",dosage:"Cardioprotection: 81mg daily. Acute MI: 325mg chewed immediately.",sideEffects:["GI bleeding","Tinnitus (toxicity)","Reye syndrome (children)"],nursing:"Give with food. Monitor for bleeding. Never use in children with viral illness.",contraindications:"Active bleeding, children with viral illness, 3rd trimester pregnancy (high dose)"},
+{name:"Apixaban",brand:"Eliquis",class:"Anticoagulant (Factor Xa Inhibitor)",category:"Anticoagulant",icon:"🩸",indications:"DVT/PE treatment/prevention, afib stroke prevention",route:"PO",dosage:"A-fib: 5mg BID. DVT/PE: 10mg BID x7d then 5mg BID.",sideEffects:["Bleeding","Bruising"],nursing:"No routine coagulation monitoring needed. Antidote: Andexxa.",contraindications:"Active bleeding, mechanical heart valves",antidote:"Andexanet alfa (Andexxa)"},
+{name:"Clopidogrel",brand:"Plavix",class:"Antiplatelet – P2Y12 Inhibitor",category:"Anticoagulant",icon:"🩸",indications:"ACS, recent MI/stroke, PCI with stent",route:"PO",dosage:"75mg once daily; ACS loading: 300–600mg",sideEffects:["Bleeding","Bruising","GI upset","TTP (rare)"],nursing:"Hold 5–7 days before surgery. Omeprazole may reduce efficacy.",contraindications:"Active pathological bleeding"},
+{name:"Metformin",brand:"Glucophage",class:"Antidiabetic – Biguanide",category:"Antidiabetic",icon:"🍭",indications:"Type 2 Diabetes Mellitus",route:"PO",dosage:"Initial 500mg BID with meals; max 2550mg/day",sideEffects:["GI upset","Lactic acidosis (rare)","B12 deficiency (long-term)"],nursing:"Give with meals. Monitor renal function. Hold 48h before/after IV contrast.",contraindications:"eGFR <30, IV contrast use, metabolic acidosis"},
+{name:"Glipizide",brand:"Glucotrol",class:"Antidiabetic – Sulfonylurea",category:"Antidiabetic",icon:"🍭",indications:"Type 2 Diabetes Mellitus",route:"PO",dosage:"2.5–20mg/day (IR) 30 min before meals",sideEffects:["Hypoglycemia","Weight gain","GI upset"],nursing:"High risk for hypoglycemia. Give 30 min before meals. Instruct patient to eat after taking.",contraindications:"Type 1 DM, DKA, sulfa allergy, renal/hepatic failure"},
+{name:"Regular Insulin",brand:"Humulin R, Novolin R",class:"Insulin – Short-acting",category:"Antidiabetic",icon:"💉",indications:"Type 1 & 2 DM, DKA, hyperkalemia (with dextrose)",route:"IV, SubQ, IM",dosage:"Variable; SubQ onset: 30 min, peak: 2–3h, duration: 6–8h.",sideEffects:["Hypoglycemia","Hypokalemia","Weight gain"],nursing:"Only insulin that can be given IV. Monitor glucose q1h when on drip. Have D50 ready.",contraindications:"Hypoglycemia",antidote:"Dextrose (D50W IV or orange juice PO)"},
+{name:"Insulin Glargine",brand:"Lantus, Basaglar, Toujeo",class:"Insulin – Long-acting (Basal)",category:"Antidiabetic",icon:"💉",indications:"Type 1 & 2 DM (basal coverage)",route:"SubQ only",dosage:"Once daily at same time; onset 1-2h, no peak, duration 20–24h",sideEffects:["Hypoglycemia","Injection site reactions","Weight gain"],nursing:"Give SubQ ONLY — never IV. Do NOT mix with other insulins. Administer at same time daily.",contraindications:"Hypoglycemia, IV administration"},
+{name:"Insulin Lispro",brand:"Humalog, Admelog",class:"Insulin – Rapid-acting",category:"Antidiabetic",icon:"💉",indications:"Prandial insulin coverage for Type 1 & 2 DM",route:"SubQ, IV (selected settings)",dosage:"Given 0–15 min before meals; onset 15 min, peak 30–90 min, duration 3–5h",sideEffects:["Hypoglycemia","Injection site reactions"],nursing:"Administer right before meals. If patient not eating, hold or reduce dose.",contraindications:"Hypoglycemia",antidote:"Dextrose (D50W IV or orange juice PO)"},
+{name:"Semaglutide",brand:"Ozempic / Rybelsus / Wegovy",class:"GLP-1 Receptor Agonist",category:"Antidiabetic",icon:"🍭",indications:"Type 2 DM, cardiovascular risk reduction, obesity (Wegovy)",route:"SubQ weekly, PO daily",dosage:"SubQ: 0.25mg weekly x4wk then 0.5–2mg weekly.",sideEffects:["Nausea","Vomiting","Diarrhea","Pancreatitis"],nursing:"Give SubQ in abdomen, thigh, or upper arm. Counsel on pancreatitis signs.",contraindications:"Personal/family hx of medullary thyroid carcinoma, MEN type 2, pancreatitis"},
+{name:"Dextrose 50% (D50W)",brand:"D50",class:"Hypoglycemia Treatment",category:"Antidiabetic",icon:"🍭",indications:"Severe hypoglycemia (glucose <70 with altered consciousness)",route:"IV push",dosage:"25–50mL IV push; repeat if needed",sideEffects:["Hyperglycemia (rebound)","Phlebitis (vesicant)","Fluid overload"],nursing:"Vesicant — give IV through large vein or central line. Recheck glucose in 15 min.",contraindications:"Hyperglycemia"},
+{name:"Albuterol",brand:"ProAir, Ventolin, Proventil",class:"Beta-2 Agonist Bronchodilator (SABA)",category:"Respiratory",icon:"🫁",indications:"Acute bronchospasm, asthma, COPD exacerbation",route:"Inhaled, Nebulized",dosage:"MDI: 2 puffs q4-6h PRN; Nebulizer: 2.5mg in 3mL NS q20min x3 (acute)",sideEffects:["Tachycardia","Tremor","Nervousness","Hypokalemia"],nursing:"Monitor HR and K+. Teach correct inhaler technique. Rinse mouth after.",contraindications:"Hypersensitivity to albuterol"},
+{name:"Salmeterol",brand:"Serevent",class:"Beta-2 Agonist (LABA)",category:"Respiratory",icon:"🫁",indications:"Maintenance of asthma & COPD — NOT for acute rescue",route:"Inhaled",dosage:"1 inhalation (50mcg) BID; must use with ICS in asthma",sideEffects:["Tachycardia","Tremor","Paradoxical bronchospasm","Hypokalemia"],nursing:"NEVER use for acute rescue. Must be paired with ICS in asthma (boxed warning).",contraindications:"Acute bronchospasm, monotherapy in asthma without ICS"},
+{name:"Ipratropium",brand:"Atrovent",class:"Anticholinergic Bronchodilator",category:"Respiratory",icon:"🫁",indications:"COPD maintenance, acute asthma (with albuterol), rhinorrhea",route:"Inhaled, Nebulized, Nasal spray",dosage:"MDI: 2 puffs TID-QID; Nebulizer: 0.5mg q6-8h",sideEffects:["Dry mouth","Constipation","Urinary retention","Blurred vision"],nursing:"Avoid spraying in eyes. Caution with BPH and narrow-angle glaucoma.",contraindications:"Hypersensitivity to atropine or ipratropium"},
+{name:"Fluticasone",brand:"Flovent (ICS), Flonase (nasal)",class:"Corticosteroid (Inhaled)",category:"Respiratory",icon:"🫁",indications:"Asthma maintenance, allergic rhinitis",route:"Inhaled, Nasal",dosage:"Inhaled: 88–440mcg BID; Nasal: 2 sprays each nostril once daily",sideEffects:["Oral thrush (candidiasis)","Hoarseness","Adrenal suppression (high doses)"],nursing:"Rinse mouth and gargle after use to prevent thrush. Not a rescue medication.",contraindications:"Acute bronchospasm (not for rescue)"},
+{name:"Montelukast",brand:"Singulair",class:"Leukotriene Receptor Antagonist",category:"Respiratory",icon:"🫁",indications:"Asthma prophylaxis, seasonal allergic rhinitis",route:"PO",dosage:"Adults: 10mg once daily in evening",sideEffects:["Headache","GI upset","Neuropsychiatric effects (depression, suicidal thoughts — boxed warning)"],nursing:"Take in evening. Counsel on neuropsychiatric side effects. Not for acute attacks.",contraindications:"Hypersensitivity; caution with neuropsychiatric history"},
+{name:"Sertraline",brand:"Zoloft",class:"Antidepressant – SSRI",category:"Psych",icon:"🧠",indications:"Depression, OCD, panic disorder, PTSD, social anxiety",route:"PO",dosage:"50–200mg once daily (start 25–50mg, titrate q1–2wk)",sideEffects:["Nausea","Sexual dysfunction","Insomnia","Diarrhea","Increased suicidal ideation (young adults)"],nursing:"4–6 weeks for full effect. Monitor mood and suicidality. Do not stop abruptly.",contraindications:"MAOIs within 14 days, pimozide, linezolid"},
+{name:"Fluoxetine",brand:"Prozac, Sarafem",class:"Antidepressant – SSRI",category:"Psych",icon:"🧠",indications:"Depression, OCD, bulimia, panic disorder",route:"PO",dosage:"10–80mg once daily (start 20mg)",sideEffects:["Insomnia","Anxiety","Sexual dysfunction","Headache"],nursing:"Longest half-life of SSRIs — less discontinuation syndrome. Monitor suicidality in youth.",contraindications:"MAOIs within 14 days (5 weeks if transitioning FROM fluoxetine), pimozide"},
+{name:"Lorazepam",brand:"Ativan",class:"Benzodiazepine (Schedule IV)",category:"Psych",icon:"🧠",indications:"Anxiety, seizure (status epilepticus), alcohol withdrawal",route:"PO, IV, IM",dosage:"Anxiety: 0.5–2mg q6-8h. Status epilepticus: 0.05–0.1mg/kg IV (max 4mg).",sideEffects:["CNS depression/sedation","Respiratory depression","Amnesia","Dependence"],nursing:"High fall risk. Do not stop abruptly (withdrawal seizure risk).",contraindications:"Acute narrow-angle glaucoma, severe respiratory depression",antidote:"Flumazenil (Romazicon)"},
+{name:"Haloperidol",brand:"Haldol",class:"Antipsychotic – Typical (Butyrophenone)",category:"Psych",icon:"🧠",indications:"Schizophrenia, acute psychosis, agitation, delirium (ICU)",route:"PO, IM, IV (IV for ICU only)",dosage:"Oral: 0.5–20mg/day. IM (acute): 5mg q1h PRN.",sideEffects:["EPS (dystonia, akathisia)","Tardive dyskinesia","QT prolongation","NMS","Sedation"],nursing:"Monitor for EPS. NMS is life-threatening — stop immediately if suspected.",contraindications:"Parkinson disease, CNS depression, QT prolongation"},
+{name:"Quetiapine",brand:"Seroquel",class:"Antipsychotic – Atypical",category:"Psych",icon:"🧠",indications:"Schizophrenia, bipolar disorder, MDD (adjunct)",route:"PO",dosage:"Psychosis: 150–750mg/day divided. Bipolar depression: 50–300mg/day.",sideEffects:["Sedation","Weight gain","Metabolic syndrome","Orthostatic hypotension","QT prolongation"],nursing:"Monitor weight, glucose, lipids. High fall risk. Take with food. Taper when discontinuing.",contraindications:"Dementia-related psychosis (boxed warning – increased mortality)"},
+{name:"Lithium",brand:"Lithobid, Eskalith",class:"Mood Stabilizer",category:"Psych",icon:"🧠",indications:"Bipolar disorder (acute mania and maintenance)",route:"PO",dosage:"Start 300mg TID; therapeutic: 0.6–1.2 mEq/L.",sideEffects:["Tremor","Polyuria/polydipsia","Weight gain","Hypothyroidism","Toxicity (narrow index)"],nursing:"Narrow therapeutic index. Monitor serum levels. Signs of toxicity: coarse tremor, confusion, ataxia.",contraindications:"Renal failure, severe dehydration, low-sodium diet"},
+{name:"Flumazenil",brand:"Romazicon",class:"Benzodiazepine Antagonist",category:"Psych",icon:"🚨",indications:"Benzodiazepine overdose reversal",route:"IV",dosage:"0.2mg IV over 15 sec; repeat q1min; max 1mg total.",sideEffects:["Seizures (in benzo-dependent patients)","Resedation","Dizziness","Nausea"],nursing:"Short-acting — resedation can occur. Do NOT use in benzo-dependent patients. BENZO ANTIDOTE.",contraindications:"Benzo-dependent patients, overdose of mixed drugs including TCAs",antidote:"N/A — it IS the antidote"},
+{name:"Omeprazole",brand:"Prilosec",class:"Proton Pump Inhibitor (PPI)",category:"GI",icon:"🫃",indications:"GERD, peptic ulcer, H. pylori (combo), NSAID-induced ulcer prevention",route:"PO, IV",dosage:"20–40mg before first meal daily",sideEffects:["Headache","Diarrhea","Magnesium deficiency (long-term)","Bone fractures (long-term high-dose)"],nursing:"Take 30–60 min before first meal. Long-term use: monitor Mg2+, B12, bone density.",contraindications:"Hypersensitivity to PPIs"},
+{name:"Ondansetron",brand:"Zofran",class:"Antiemetic – 5-HT3 Receptor Antagonist",category:"GI",icon:"🫃",indications:"Chemotherapy-induced N&V, PONV, pregnancy hyperemesis",route:"PO, IV, IM",dosage:"4–8mg q6-8h PO or IV",sideEffects:["Headache","Constipation","QT prolongation","Serotonin syndrome"],nursing:"Monitor ECG in at-risk patients. Give IV slowly. ODT let dissolve — do not swallow.",contraindications:"Hypersensitivity, congenital long QT syndrome"},
+{name:"Metoclopramide",brand:"Reglan",class:"Prokinetic / Antiemetic – Dopamine Antagonist",category:"GI",icon:"🫃",indications:"GERD, gastroparesis, N&V, post-op ileus",route:"PO, IV, IM",dosage:"5–10mg TID-QID before meals and at bedtime",sideEffects:["Tardive dyskinesia (>12wks)","EPS","Restlessness/akathisia","Drowsiness"],nursing:"Limit to <12 weeks. Monitor for involuntary movements — may be irreversible.",contraindications:"GI obstruction or perforation, Parkinson disease"},
+{name:"Loperamide",brand:"Imodium",class:"Antidiarrheal – Opioid Agonist (local)",category:"GI",icon:"🫃",indications:"Acute/chronic diarrhea, high-output ileostomy",route:"PO",dosage:"4mg initially then 2mg after each loose stool; max 16mg/day",sideEffects:["Constipation","Abdominal cramping","Dizziness"],nursing:"Not for diarrhea with fever or bloody stools. Adequate hydration essential.",contraindications:"Acute dysentery, C. diff colitis, ulcerative colitis exacerbation"},
+{name:"Polyethylene Glycol",brand:"MiraLAX, GoLYTELY",class:"Osmotic Laxative",category:"GI",icon:"🫃",indications:"Constipation, bowel prep for colonoscopy",route:"PO",dosage:"Constipation: 17g in 8oz water once daily. GoLYTELY (prep): 4L over 3-4h.",sideEffects:["Bloating","Nausea","Cramping","Electrolyte imbalance (high-volume)"],nursing:"Adequate fluid intake essential. Monitor electrolytes for bowel prep use.",contraindications:"Bowel obstruction"},
+{name:"Famotidine",brand:"Pepcid",class:"H2 Receptor Antagonist",category:"GI",icon:"🫃",indications:"GERD, peptic ulcer, stress ulcer prophylaxis",route:"PO, IV",dosage:"20–40mg PO once or twice daily; IV: 20mg q12h",sideEffects:["Headache","Dizziness","Constipation or diarrhea"],nursing:"Less effective than PPIs but lower long-term side effect profile. Reduce dose in renal impairment.",contraindications:"Hypersensitivity to H2 blockers"},
+{name:"Phenytoin",brand:"Dilantin",class:"Anticonvulsant – Hydantoin",category:"Neuro",icon:"🧠",indications:"Tonic-clonic seizures, status epilepticus",route:"PO, IV",dosage:"Loading: 15–20mg/kg IV at max 50mg/min; Maintenance: 300–400mg/day.",sideEffects:["Gingival hyperplasia","Nystagmus","Ataxia","Cardiac arrhythmia (rapid IV)","Purple glove syndrome"],nursing:"Infuse IV no faster than 50mg/min. Must use NS only — D5W causes precipitation. Therapeutic: 10–20 mcg/mL.",contraindications:"Sinus bradycardia, heart block, pregnancy (teratogenic)"},
+{name:"Levetiracetam",brand:"Keppra",class:"Anticonvulsant",category:"Neuro",icon:"🧠",indications:"Partial onset seizures, myoclonic seizures, generalized tonic-clonic",route:"PO, IV",dosage:"500–3000mg/day divided BID",sideEffects:["Irritability/behavioral changes (Keppra rage)","Somnolence","Fatigue","Dizziness"],nursing:"Monitor mood and behavior. Fewer drug interactions than phenytoin. Renal dose adjustment.",contraindications:"Hypersensitivity"},
+{name:"Gabapentin",brand:"Neurontin",class:"Anticonvulsant / Neuropathic Pain Agent",category:"Neuro",icon:"🧠",indications:"Partial seizures, neuropathic pain, fibromyalgia, restless legs",route:"PO",dosage:"Seizures: 300–1200mg TID. Pain: 100–600mg TID.",sideEffects:["Somnolence","Dizziness","Ataxia","Edema","Respiratory depression (with CNS depressants)"],nursing:"Reduce dose in renal impairment. High fall risk. Abuse potential. Do not stop abruptly.",contraindications:"Hypersensitivity; caution with opioids"},
+{name:"Sumatriptan",brand:"Imitrex",class:"Antimigraine – Triptan",category:"Neuro",icon:"🧠",indications:"Acute migraine treatment, cluster headaches",route:"PO, SubQ, Nasal spray",dosage:"PO: 25–100mg; SubQ: 6mg (fastest onset); repeat in 2h if needed.",sideEffects:["Chest tightness/pressure","Tingling","Warm/flushing sensations","Dizziness"],nursing:"For acute attack only — not preventive. Contraindicated in cardiovascular disease.",contraindications:"CAD, uncontrolled HTN, hemiplegic migraine, MAOIs within 14 days"},
+{name:"Donepezil",brand:"Aricept",class:"Cholinesterase Inhibitor",category:"Neuro",icon:"🧠",indications:"Alzheimer disease, dementia",route:"PO",dosage:"5mg once daily at bedtime; may increase to 10–23mg after 4–6 weeks",sideEffects:["Nausea","Diarrhea","Insomnia","Bradycardia","Muscle cramps"],nursing:"Give at bedtime to minimize GI side effects. Does not cure — slows progression.",contraindications:"Hypersensitivity to piperidine derivatives"},
+{name:"Propofol",brand:"Diprivan",class:"General Anesthetic / Sedative-Hypnotic",category:"Neuro",icon:"💉",indications:"ICU sedation, procedural sedation, induction/maintenance of anesthesia",route:"IV only",dosage:"ICU sedation: 5–50 mcg/kg/min infusion.",sideEffects:["Hypotension","Pain on injection","Hypertriglyceridemia","Propofol Infusion Syndrome (rare)"],nursing:"Contains soybean oil and egg lecithin — check allergies. Single-use vials. Monitor triglycerides.",contraindications:"Egg/soybean/sulfite allergy"},
+{name:"Levothyroxine",brand:"Synthroid, Levoxyl",class:"Thyroid Hormone Replacement",category:"Endocrine",icon:"🦋",indications:"Hypothyroidism, thyroid cancer suppression",route:"PO, IV",dosage:"1.6 mcg/kg/day PO; start low (25–50mcg) in elderly/cardiac patients.",sideEffects:["Tachycardia","Palpitations","Tremor","Insomnia","Osteoporosis (overdose)"],nursing:"Take on empty stomach 30–60 min before breakfast. Do not take within 4h of calcium, iron, antacids. Monitor TSH.",contraindications:"Untreated adrenal insufficiency, thyrotoxicosis"},
+{name:"Prednisone",brand:"Deltasone",class:"Corticosteroid (Oral)",category:"Steroid",icon:"💊",indications:"Inflammation, autoimmune disorders, asthma exacerbation",route:"PO",dosage:"5–60mg daily (variable by indication)",sideEffects:["Hyperglycemia","Weight gain/cushingoid","Mood changes","Immunosuppression","Osteoporosis","Hypokalemia"],nursing:"Give with food. Do NOT stop abruptly (adrenal crisis risk — taper). Monitor glucose, BP, infection signs.",contraindications:"Systemic fungal infections, live vaccines"},
+{name:"Methylprednisolone",brand:"Solu-Medrol",class:"Corticosteroid (IV)",category:"Steroid",icon:"💊",indications:"Acute asthma, COPD exacerbation, autoimmune flares",route:"IV, IM, PO",dosage:"IV: 40–250mg q4-6h; pulse: 500–1000mg/day",sideEffects:["Hyperglycemia","Insomnia","GI upset","Fluid retention","Immunosuppression"],nursing:"Monitor glucose closely. Monitor for GI bleeding. Avoid live vaccines.",contraindications:"Systemic fungal infection, live vaccines"},
+{name:"Dexamethasone",brand:"Decadron",class:"Corticosteroid (Long-acting)",category:"Steroid",icon:"💊",indications:"Cerebral edema, N&V prophylaxis (chemo), croup, COVID-19 (O2-dependent)",route:"PO, IV, IM",dosage:"Edema: 10mg IV then 4mg q6h. N&V: 4–8mg IV.",sideEffects:["Hyperglycemia","Immunosuppression","GI irritation","Insomnia"],nursing:"No mineralocorticoid activity. Monitor glucose. Most potent anti-inflammatory of common corticosteroids.",contraindications:"Systemic fungal infections"},
+{name:"Hydrocortisone",brand:"Solu-Cortef",class:"Corticosteroid (Has Mineralocorticoid Activity)",category:"Steroid",icon:"💊",indications:"Adrenal crisis/insufficiency, severe allergic reactions, shock",route:"IV, IM, PO, topical",dosage:"Adrenal crisis: 100mg IV q8h.",sideEffects:["Fluid and sodium retention","Hyperglycemia","GI upset","Hypokalemia"],nursing:"Has both glucocorticoid and mineralocorticoid effects. Monitor electrolytes and glucose.",contraindications:"Systemic fungal infections"}
+];
+function getAllMeds(){return builtInMeds.concat(customMeds.map(m=>Object.assign({},m,{isCustom:true})));}
+function saveCustomMeds(){localStorage.setItem(CUSTOM_MEDS_KEY,JSON.stringify(customMeds));updateMedBadges();}
+function updateMedBadges(){var total=getAllMeds().length;document.getElementById('medCountBadge').innerText=total+' Meds';var badge=document.getElementById('customMedsBadge');if(customMeds.length>0){badge.style.display='inline';badge.innerText='+'+customMeds.length+' custom';}else badge.style.display='none';}
+var addMedFormVisible=false;
+document.getElementById('addMedToggleBtn').addEventListener('click',function(){addMedFormVisible=!addMedFormVisible;document.getElementById('addMedForm').classList.toggle('visible',addMedFormVisible);this.innerText=addMedFormVisible?'✕ Cancel':'➕ Add Your Own Medication';});
+document.getElementById('cancelNewMedBtn').addEventListener('click',function(){addMedFormVisible=false;document.getElementById('addMedForm').classList.remove('visible');document.getElementById('addMedToggleBtn').innerText='➕ Add Your Own Medication';clearAddMedForm();});
+document.getElementById('saveNewMedBtn').addEventListener('click',function(){var name=document.getElementById('newMedName').value.trim(),cls=document.getElementById('newMedClass').value.trim(),cat=document.getElementById('newMedCategory').value;if(!name||!cls){alert('Drug name and drug class are required.');return;}var se=document.getElementById('newMedSideEffects').value.split(',').map(s=>s.trim()).filter(Boolean);var newMed={name,brand:document.getElementById('newMedBrand').value.trim()||'',class:cls,category:cat,icon:'💊',indications:document.getElementById('newMedIndications').value.trim()||'N/A',route:document.getElementById('newMedRoute').value.trim()||'N/A',dosage:document.getElementById('newMedDosage').value.trim()||'N/A',sideEffects:se.length?se:['See prescribing information'],nursing:document.getElementById('newMedNursing').value.trim()||'Follow standard nursing protocol.',contraindications:document.getElementById('newMedContra').value.trim()||'See prescribing information',antidote:document.getElementById('newMedAntidote').value.trim()||''};customMeds.push(newMed);saveCustomMeds();clearAddMedForm();addMedFormVisible=false;document.getElementById('addMedForm').classList.remove('visible');document.getElementById('addMedToggleBtn').innerText='➕ Add Your Own Medication';selectedMed=null;renderMedList();alert('✓ Medication "'+name+'" saved!');});
+function clearAddMedForm(){['newMedName','newMedBrand','newMedClass','newMedIndications','newMedRoute','newMedDosage','newMedSideEffects','newMedNursing','newMedContra','newMedAntidote'].forEach(id=>document.getElementById(id).value='');}
+const canvas=document.getElementById('confetti-canvas'),ctx=canvas.getContext('2d');canvas.width=window.innerWidth;canvas.height=window.innerHeight;let pieces=[];
+function Confetti(x,y){this.x=x;this.y=y;this.size=Math.random()*6+4;this.speedY=Math.random()*3+2;this.speedX=Math.random()*2-1;this.color=['#2563eb','#7c3aed','#dc2626','#16a34a','#d97706'][Math.floor(Math.random()*5)];this.rotation=Math.random()*360;this.rotSpeed=Math.random()*10-5;}
+Confetti.prototype.update=function(){this.y+=this.speedY;this.x+=this.speedX;this.rotation+=this.rotSpeed;if(this.y>canvas.height){this.y=-10;this.x=Math.random()*canvas.width;}};
+Confetti.prototype.draw=function(){ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.rotation*Math.PI/180);ctx.fillStyle=this.color;ctx.fillRect(-this.size/2,-this.size/2,this.size,this.size);ctx.restore();};
+function animateConfetti(){ctx.clearRect(0,0,canvas.width,canvas.height);pieces.forEach(p=>{p.update();p.draw();});if(pieces.length>0)requestAnimationFrame(animateConfetti);}
+function showConfetti(){pieces=[];for(var i=0;i<100;i++)pieces.push(new Confetti(Math.random()*canvas.width,Math.random()*canvas.height-canvas.height));animateConfetti();setTimeout(()=>{pieces=[];},5000);}
+function saveTasks(){localStorage.setItem(TASKS_KEY,JSON.stringify(tasks));}
+function addTask(){var text=document.getElementById('taskInput').value.trim(),subject=document.getElementById('taskSubject').value,priority=document.getElementById('taskPriority').value,date=document.getElementById('taskDate').value;if(!text||!date){alert('Please enter task description and date');return;}tasks.push({text,subject,priority,date,done:false,id:Date.now()});saveTasks();render();renderCalendar();document.getElementById('taskInput').value='';document.getElementById('taskDate').valueAsDate=new Date();}
+function toggleTask(i){tasks[i].done=!tasks[i].done;saveTasks();render();if(tasks[i].done)showConfetti();}
+function removeTask(i){if(confirm('Delete this task?')){tasks.splice(i,1);saveTasks();render();renderCalendar();}}
+function filterTasks(f){currentFilter=f;document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));document.querySelector('.filter-tab[data-filter="'+f+'"]').classList.add('active');render();}
+function getFilteredTasks(){var now=new Date(),today=now.toISOString().split('T')[0],wk=new Date(now.getTime()+7*864e5).toISOString().split('T')[0];if(currentFilter==='today')return tasks.filter(t=>t.date===today);if(currentFilter==='week')return tasks.filter(t=>t.date>=today&&t.date<=wk);return tasks;}
+function formatDate(ds){var p=ds.split('-');return new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+function render(){var ft=getFilteredTasks(),c=document.getElementById('taskList');if(!ft.length){c.innerHTML='<div class="empty-state">No tasks yet</div>';updateStats();return;}c.innerHTML=ft.map(task=>{var oi=tasks.indexOf(task);return '<div class="task-item '+(task.done?'done':'')+' priority-'+task.priority+'"><div class="task-checkbox '+(task.done?'checked':'')+'" data-action="toggle" data-index="'+oi+'">'+(task.done?'✓':'')+'</div><div class="task-content"><div class="task-text">'+task.text+'</div><div class="task-meta"><span>'+task.subject+'</span><span>'+task.priority.toUpperCase()+'</span><span>'+formatDate(task.date)+'</span></div></div><div class="task-actions"><button data-action="remove" data-index="'+oi+'">🗑️</button></div></div>';}).join('');updateStats();}
+function updateStats(){var now=new Date(),today=now.toISOString().split('T')[0],wk=new Date(now.getTime()+7*864e5).toISOString().split('T')[0];document.getElementById('weekTaskCount').innerText=tasks.filter(t=>t.date>=today&&t.date<=wk).length;document.getElementById('completedCount').innerText=tasks.filter(t=>t.date===today&&t.done).length;}
+function updateTimerDisplay(){var m=Math.floor(timerSeconds/60),s=timerSeconds%60;document.getElementById('timerDisplay').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+function startTimer(){if(timerInterval)return;timerInterval=setInterval(()=>{if(timerSeconds>0){timerSeconds--;updateTimerDisplay();}else{pauseTimer();alert('⏰ Timer finished! Great work!');showConfetti();}},1000);}
+function pauseTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;}}
+function setTimerPreset(min,btn){pauseTimer();timerPresetMinutes=min;timerSeconds=min*60;updateTimerDisplay();localStorage.setItem(TIMER_PRESET_KEY,min);document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function setCustomTimer(){var min=parseInt(document.getElementById('customMinutes').value);if(min&&min>0&&min<=180){pauseTimer();timerPresetMinutes=min;timerSeconds=min*60;updateTimerDisplay();localStorage.setItem(TIMER_PRESET_KEY,min);document.getElementById('customMinutes').value='';document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));}}
+function resetTimer(){pauseTimer();timerSeconds=timerPresetMinutes*60;updateTimerDisplay();}
+function calculate(){var o=parseFloat(document.getElementById('ordered').value),a=parseFloat(document.getElementById('available').value),v=parseFloat(document.getElementById('volume').value);if(!o||!a||!v){document.getElementById('doseOutput').innerHTML='<div class="calc-result" style="background:rgba(220,38,38,0.1);color:var(--danger);">Please fill in all fields</div>';return;}document.getElementById('doseOutput').innerHTML='<div class="calc-result">💉 Administer '+((o/a)*v).toFixed(2)+' mL</div>';}
+function calculateIV(){var vol=parseFloat(document.getElementById('ivVolume').value),time=parseFloat(document.getElementById('ivTime').value),df=parseFloat(document.getElementById('dropFactor').value);if(!vol||!time||!df){document.getElementById('ivOutput').innerHTML='<div class="calc-result" style="background:rgba(220,38,38,0.1);color:var(--danger);">Please fill in all fields</div>';return;}document.getElementById('ivOutput').innerHTML='<div class="calc-result">💧 Flow Rate: '+(vol/time).toFixed(1)+' mL/hr<br>'+((vol*df)/(time*60)).toFixed(0)+' gtts/min</div>';}
+function highlight(str,query){if(!query)return str;var esc=query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return str.replace(new RegExp('('+esc+')','gi'),'<mark>$1</mark>');}
+function fuzzyScore(text,query){text=text.toLowerCase();query=query.toLowerCase();if(text.includes(query))return 100;var words=text.split(/[\s,\-\/()]+/);for(var i=0;i<words.length;i++){if(words[i].startsWith(query))return 80;}var qi=0,score=0;for(var ti=0;ti<text.length&&qi<query.length;ti++){if(text[ti]===query[qi]){score++;qi++;}}if(qi<query.length)return 0;return Math.round((score/query.length)*40);}
+function getMedMatchScore(med,query){if(!query)return 1;var scores=[fuzzyScore(med.name,query)*2,fuzzyScore(med.brand||'',query)*1.8,fuzzyScore(med.class,query)*1.2,fuzzyScore(med.category,query),fuzzyScore(med.indications,query)*0.5];return Math.max.apply(null,scores);}
+function getFilteredMeds(){var q=medSearchQuery.toLowerCase().trim(),filtered=getAllMeds();if(medActiveCat!=='all'){filtered=filtered.filter(m=>m.category===medActiveCat);}if(q){filtered=filtered.map(m=>({med:m,score:getMedMatchScore(m,q)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).map(x=>x.med);}return filtered;}
+function renderMedList(){var r=document.getElementById('medResults'),q=medSearchQuery;if(selectedMed){renderMedDetail(selectedMed,q);return;}var clearBtn=document.getElementById('medClearBtn');clearBtn.style.display=q?'flex':'none';if(!q&&medActiveCat==='all'){r.innerHTML='<div class="med-search-hint"><span class="hint-icon">💊</span>Search by drug name, brand name, or category</div>';return;}var filtered=getFilteredMeds();if(!filtered.length){r.innerHTML='<div class="med-no-results"><span class="med-no-results-icon">🔍</span><p>No medications found for "<strong>'+q+'</strong>"</p></div>';return;}var allMeds=getAllMeds();r.innerHTML='<div style="font-size:11px;color:var(--muted);margin-bottom:7px;">'+filtered.length+' medication'+(filtered.length!==1?'s':'')+' found'+(q?' for "'+q+'"':'')+'</div>'+filtered.map(function(m){var idx=allMeds.indexOf(m);var customTag=m.isCustom?'<span style="background:rgba(22,163,74,.15);color:var(--success);border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;margin-left:3px;">CUSTOM</span>':'';return '<div class="med-item" data-idx="'+idx+'"><div class="med-item-icon">'+m.icon+'</div><div class="med-item-body"><div class="med-name">'+highlight(m.name,q)+customTag+'</div>'+(m.brand?'<div class="med-generic">'+highlight(m.brand,q)+'</div>':'')+'<div class="med-class"><span class="med-class-tag">'+m.category+'</span> '+highlight(m.class,q)+'</div></div><div class="med-arrow">›</div></div>';}).join('');}
+function renderMedDetail(med,q){var r=document.getElementById('medResults');var deleteBtn=med.isCustom?'<button id="deleteCustomMedBtn" style="background:rgba(220,38,38,.1);color:var(--danger);border-color:rgba(220,38,38,.3);font-size:12px;padding:6px 11px;min-height:32px;margin-left:auto;">🗑️ Delete</button>':'';r.innerHTML='<div style="display:flex;align-items:center;gap:7px;margin-bottom:11px;"><button class="med-back-btn" id="medBackBtn" style="margin:0;">← Back</button>'+deleteBtn+'</div><div class="med-detail-view"><div class="med-detail-header"><div class="med-detail-name">'+med.icon+' '+med.name+(med.isCustom?' <span style="background:rgba(255,255,255,.25);border-radius:3px;padding:1px 7px;font-size:11px;">CUSTOM</span>':'')+'</div>'+(med.brand?'<div class="med-detail-generic">Brand: '+med.brand+'</div>':'')+'<span class="med-detail-class">'+med.class+'</span></div><div class="med-detail-section"><h4>🎯 Indications</h4><p>'+med.indications+'</p></div><div class="med-detail-section"><h4>📏 Dosage & Route</h4><div class="med-tags" style="margin-bottom:5px;">'+(med.route||'').split(',').map(r2=>'<span class="med-tag-blue">'+r2.trim()+'</span>').join('')+'</div><p>'+med.dosage+'</p></div><div class="med-detail-section"><h4>⚠️ Side Effects</h4><div class="med-tags">'+med.sideEffects.map(s=>'<span class="med-tag-yellow">'+s+'</span>').join('')+'</div></div><div class="med-detail-section"><h4>🩺 Nursing Considerations</h4><div class="med-nursing-box"><p>'+med.nursing+'</p></div></div><div class="med-detail-section"><h4>🚫 Contraindications</h4><div class="med-tags">'+med.contraindications.split(',').map(c=>'<span class="med-tag-red">'+c.trim()+'</span>').join('')+'</div></div>'+(med.antidote?'<div class="med-detail-section"><h4>💊 Antidote</h4><p style="color:var(--success);font-weight:600;">'+med.antidote+'</p></div>':'')+'</div>';document.getElementById('medBackBtn').addEventListener('click',function(){selectedMed=null;renderMedList();});if(med.isCustom){document.getElementById('deleteCustomMedBtn').addEventListener('click',function(){if(confirm('Delete "'+med.name+'" from your custom medications?')){var idx=customMeds.findIndex(m=>m.name===med.name);if(idx>-1){customMeds.splice(idx,1);saveCustomMeds();}selectedMed=null;renderMedList();}});}}
+function savePhotos(){localStorage.setItem(PHOTOS_KEY,JSON.stringify(notePhotos));}
+function renderPhotos(){document.getElementById('photoPreviewContainer').innerHTML=notePhotos.map((p,i)=>'<div class="photo-preview"><img src="'+p+'" alt="Note photo"><button class="photo-delete" onclick="deletePhoto('+i+')">×</button></div>').join('');}
+window.deletePhoto=i=>{if(confirm('Delete this photo?')){notePhotos.splice(i,1);savePhotos();renderPhotos();}};
+function saveNotes(){localStorage.setItem(NOTES_KEY,document.getElementById('quickNotes').value);savePhotos();alert('✓ Notes saved!');}
+function loadNotes(){document.getElementById('quickNotes').value=localStorage.getItem(NOTES_KEY)||'';}
+function saveChecklist(){var states=Array.from(document.querySelectorAll('.checklist input[type="checkbox"]')).map(cb=>cb.checked);localStorage.setItem(CHECKLIST_KEY,JSON.stringify(states));}
+function loadChecklist(){var saved=localStorage.getItem(CHECKLIST_KEY);if(saved){var s=JSON.parse(saved);document.querySelectorAll('.checklist input[type="checkbox"]').forEach((cb,i)=>cb.checked=s[i]||false);}}
+function resetChecklist(){document.querySelectorAll('.checklist input[type="checkbox"]').forEach(cb=>cb.checked=false);saveChecklist();}
+function toggleTheme(){document.body.classList.toggle('dark');var dark=document.body.classList.contains('dark');localStorage.setItem('theme',dark?'dark':'light');document.getElementById('themeBtn').innerText=dark?'☀️':'🌙';}
+function loadTheme(){if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark');document.getElementById('themeBtn').innerText='☀️';}}
+function switchTab(name){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));document.querySelector('.tab[data-tab="'+name+'"]').classList.add('active');document.getElementById(name+'Tab').classList.add('active');}
+function renderCalendar(){var yr=currentDate.getFullYear(),mo=currentDate.getMonth();var months=['January','February','March','April','May','June','July','August','September','October','November','December'];document.getElementById('calendarMonth').innerText=months[mo]+' '+yr;var firstDay=new Date(yr,mo,1).getDay(),daysInMonth=new Date(yr,mo+1,0).getDate(),prevDays=new Date(yr,mo,0).getDate();var cal=document.getElementById('calendar');cal.innerHTML='';cal.className='calendar-grid';['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{var h=document.createElement('div');h.className='calendar-day-header';h.innerText=d;cal.appendChild(h);});var todayStr=new Date().toISOString().split('T')[0];for(var i=firstDay-1;i>=0;i--){var d=document.createElement('div');d.className='calendar-day other-month';d.innerHTML='<div class="calendar-day-number">'+(prevDays-i)+'</div>';cal.appendChild(d);}for(var day=1;day<=daysInMonth;day++){var el=document.createElement('div');el.className='calendar-day';var ds=yr+'-'+String(mo+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');if(ds===todayStr)el.classList.add('today');if(tasks.some(t=>t.date===ds))el.classList.add('has-tasks');if(selectedDate===ds)el.classList.add('selected');el.innerHTML='<div class="calendar-day-number">'+day+'</div>';el.dataset.date=ds;cal.appendChild(el);}var total=cal.children.length-7;for(var r=1;r<=42-total-7;r++){var re=document.createElement('div');re.className='calendar-day other-month';re.innerHTML='<div class="calendar-day-number">'+r+'</div>';cal.appendChild(re);}}
+function selectDate(ds){selectedDate=ds;renderCalendar();showDayEvents(ds);}
+function showDayEvents(ds){var c=document.getElementById('dayEvents'),dt=tasks.filter(t=>t.date===ds);if(!dt.length){c.innerHTML='<div style="text-align:center;color:var(--muted);padding:14px;">No tasks for '+formatDate(ds)+'</div>';return;}var p=ds.split('-'),date=new Date(+p[0],+p[1]-1,+p[2]);c.innerHTML='<h3 style="margin-bottom:9px;font-size:14px;">Tasks for '+date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+'</h3>';dt.forEach(task=>{var div=document.createElement('div');div.className='event-item priority-'+task.priority;div.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-weight:600;margin-bottom:2px;font-size:13px;">'+task.text+'</div><div style="font-size:11px;color:var(--muted);">'+task.subject+' · '+task.priority.toUpperCase()+'</div></div>'+(task.done?'<span style="color:var(--success);font-size:16px;">✓</span>':'')+'</div>';c.appendChild(div);});}
+document.getElementById('themeBtn').addEventListener('click',toggleTheme);
+document.getElementById('addTaskBtn').addEventListener('click',addTask);
+document.getElementById('startTimerBtn').addEventListener('click',startTimer);
+document.getElementById('pauseTimerBtn').addEventListener('click',pauseTimer);
+document.getElementById('resetTimerBtn').addEventListener('click',resetTimer);
+document.getElementById('setCustomTimerBtn').addEventListener('click',setCustomTimer);
+document.getElementById('calculateBtn').addEventListener('click',calculate);
+document.getElementById('calculateIVBtn').addEventListener('click',calculateIV);
+document.getElementById('saveNotesBtn').addEventListener('click',saveNotes);
+document.getElementById('resetChecklistBtn').addEventListener('click',resetChecklist);
+document.getElementById('prevMonthBtn').addEventListener('click',()=>{currentDate.setMonth(currentDate.getMonth()-1);renderCalendar();if(selectedDate)showDayEvents(selectedDate);});
+document.getElementById('nextMonthBtn').addEventListener('click',()=>{currentDate.setMonth(currentDate.getMonth()+1);renderCalendar();if(selectedDate)showDayEvents(selectedDate);});
+document.getElementById('medSearch').addEventListener('input',function(){medSearchQuery=this.value;selectedMed=null;renderMedList();});
+document.getElementById('medClearBtn').addEventListener('click',function(){document.getElementById('medSearch').value='';medSearchQuery='';selectedMed=null;renderMedList();});
+document.getElementById('medCategoryFilters').addEventListener('click',function(e){var btn=e.target.closest('.med-cat-btn');if(!btn)return;medActiveCat=btn.dataset.cat;selectedMed=null;document.querySelectorAll('.med-cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMedList();});
+document.getElementById('medResults').addEventListener('click',function(e){var item=e.target.closest('.med-item[data-idx]');if(item){var allMeds=getAllMeds();selectedMed=allMeds[parseInt(item.dataset.idx)];renderMedDetail(selectedMed,medSearchQuery);}});
+document.getElementById('photoInput').addEventListener('change',function(e){Array.from(e.target.files).forEach(file=>{var r=new FileReader();r.onload=ev=>{notePhotos.push(ev.target.result);renderPhotos();};r.readAsDataURL(file);});e.target.value='';});
+document.querySelectorAll('.filter-tab').forEach(tab=>tab.addEventListener('click',function(){filterTasks(this.dataset.filter);}));
+document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',function(){switchTab(this.dataset.tab);}));
+document.querySelectorAll('.preset-btn').forEach(btn=>btn.addEventListener('click',function(){setTimerPreset(parseInt(this.dataset.minutes),this);}));
+document.getElementById('taskList').addEventListener('click',function(e){var btn=e.target.closest('[data-action]');if(btn){var a=btn.dataset.action,i=parseInt(btn.dataset.index);if(a==='toggle')toggleTask(i);else if(a==='remove')removeTask(i);}});
+document.getElementById('calendar').addEventListener('click',function(e){var d=e.target.closest('.calendar-day');if(d&&d.dataset.date&&!d.classList.contains('other-month'))selectDate(d.dataset.date);});
+document.getElementById('checklist').addEventListener('change',saveChecklist);
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+loadTheme();loadNotes();renderPhotos();loadChecklist();render();renderCalendar();updateTimerDisplay();renderMedList();updateGraduationCountdown();updateMedBadges();setInterval(updateGraduationCountdown,60000);
+var sp=localStorage.getItem(TIMER_PRESET_KEY);if(sp){timerPresetMinutes=parseInt(sp);timerSeconds=timerPresetMinutes*60;updateTimerDisplay();document.querySelectorAll('.preset-btn').forEach(b=>{if(parseInt(b.dataset.minutes)===timerPresetMinutes)b.classList.add('active');});}
+document.getElementById('taskDate').valueAsDate=new Date();
 })();
 </script>
 </body>
